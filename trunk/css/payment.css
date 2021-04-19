@@ -1,0 +1,127 @@
+.expresspay-payment {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+}
+
+.expresspay-payment select {
+    width: 100%;
+}
+
+.expresspay-payment-header {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.expresspay-payment-header .logo {
+    width: 40%;
+    margin: 10px;
+}
+
+.expresspay-payment-header .desc {
+    width: 60%;
+    text-align: center;
+    margin: 10px;
+}
+
+.expresspay-payment .row {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin: 5px;
+    padding: 5px;
+}
+
+.expresspay-payment .row .label {
+    width: 25%;
+    text-align: right;
+}
+
+.expresspay-payment .row .label label {
+    font-size: 20px;
+    margin: 15px;
+}
+
+.expresspay-payment .row .field {
+    width: 75%;
+    margin: 5px;
+}
+
+.expresspay-payment .row .field input {
+    width: 100%;
+    border-radius: 5px;
+}
+
+.expresspay-payment .row .expresspay_payment_method {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid gray;
+}
+
+.expresspay-payment .row .expresspay_payment_method input[type="radio"] {
+    width: 5%;
+}
+
+.expresspay-payment .row .expresspay_payment_method label {
+    width: 95%;
+}
+
+#first_step {
+    display: block;
+}
+
+#second_step {
+    display: none;
+}
+
+#three_step {
+    display: none;
+}
+
+#response_step {
+    display: none;
+}
+
+.expresspay-payment .row.back_link i {
+    cursor: pointer;
+    font-style: normal;
+}
+
+.expresspay-payment .row.back_link i:hover {
+    text-decoration: underline;
+}
+
+.expresspay-payment .row label {
+    font-style: normal;
+}
+
+.expresspay-payment-email,
+.expresspay-payment-phone {
+    display: none;
+}
+
+#three_step .table {
+    border: 1px solid black;
+}
+
+#three_step .table .val,
+#three_step .table .desc {
+    display: flex;
+    justify-content: center;
+    padding: 0 5px 0 5px;
+    width: 50%;
+}
+
+#response {
+    display: flex;
+    justify-content: center;
+    padding: 0 5px 0 5px;
+    width: 50%;
+}
