@@ -39,6 +39,7 @@
 .expresspay-payment .row .label {
     width: 25%;
     text-align: right;
+    margin: auto;
 }
 
 .expresspay-payment .row .label label {
@@ -62,12 +63,8 @@
     width: 100%;
     padding: 10px;
     border-radius: 6px;
-    border: 1px solid gray;
 }
 
-.expresspay-payment .row .expresspay_payment_method input[type="radio"] {
-    width: 5%;
-}
 
 .expresspay-payment .row .expresspay_payment_method label {
     width: 95%;

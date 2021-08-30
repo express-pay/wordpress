@@ -1,0 +1,99 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: ExpressPay Payment Module\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-08-27 09:20+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.5.3; wp-5.8\n"
+"X-Domain: wordpress_expresspay"
+
+#: views/admin/payment_method_empty.php:6
+msgid "Add a payment method"
+msgstr ""
+
+#: expresspay.payment.php:69 expresspay.payment.php:70
+msgid "Express Payments"
+msgstr ""
+
+#. Name of the plugin
+msgid "ExpressPay Payment Module"
+msgstr ""
+
+#: expresspay.payment.php:77 expresspay.payment.php:78
+#: views/admin/home_options.php:23
+msgid "Home"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://express-pay.by"
+msgstr ""
+
+#. URI of the plugin
+msgid "https://express-pay.by/cms-extensions/wordpress"
+msgstr ""
+
+#: views/admin/home_options.php:36
+msgid "Invoices and"
+msgstr ""
+
+#: expresspay.payment.php:95 expresspay.payment.php:96
+#: views/admin/home_options.php:26
+msgid "Invoices and payemnts"
+msgstr ""
+
+#. Author of the plugin
+msgid "LLC «TriIncom»"
+msgstr ""
+
+#: views/admin/payment_method_empty.php:11
+msgid "Name"
+msgstr ""
+
+#: views/admin/payment_method_empty.php:14
+msgid "Options"
+msgstr ""
+
+#: views/admin/home_options.php:36
+msgid "payemnts"
+msgstr ""
+
+#. Description of the plugin
+msgid ""
+"Place the plugin shortcode at any of your pages and start to accept payments "
+"in WordPress instantly"
+msgstr ""
+
+#: views/admin/home_options.php:18
+msgid "Service «Express Payments»"
+msgstr ""
+
+#: expresspay.payment.php:86 expresspay.payment.php:87
+#: expresspay.payment.php:104 expresspay.payment.php:105
+#: views/admin/home_options.php:29 views/admin/home_options.php:37
+msgid "Settings"
+msgstr ""
+
+#: views/admin/payment_method_empty.php:13
+msgid "Status"
+msgstr ""
+
+#: views/admin/payment_method_empty.php:19
+msgid "The list of payment methods is empty"
+msgstr ""
+
+#: views/admin/payment_method_empty.php:12
+msgid "Type of"
+msgstr ""
+
+#: views/admin/home_options.php:44
+msgid "© All rights reserved | LLC «TriIncom»,"
+msgstr ""

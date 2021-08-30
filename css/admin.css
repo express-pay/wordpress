@@ -156,6 +156,8 @@ a.icon.icon_on {
 }
 
 .back_link {
+    margin-top: 10px;
+    margin-right: 20px;
     text-align: right;
 }
 

@@ -1,4 +1,4 @@
-jQuery(document).ready(function() {
+jQuery(document).ready(function () {
     let expressPayAccountNumber = GetParameterValues('ExpressPayAccountNumber');
 
     if (expressPayAccountNumber != null) {
@@ -11,22 +11,21 @@ jQuery(document).ready(function() {
 
     }
 
-    jQuery('#expresspay-payment-submit-btn').click(function() {
+    jQuery('#expresspay-payment-submit-btn').click(function () {
         //getFormData();
     });
 
-    jQuery('#btn_step_first').click(function() {
+    jQuery('#btn_step_first').click(function () {
 
         let type = jQuery('#first_step input[name=payment_method]:checked').attr('data-type');
         let sum = jQuery('#expresspay-payment-sum').val();
 
         if (type == undefined || isNaN(sum) || sum < 0.01) {
             return;
-        } else if (type == "Интернет-эквайринг") {
-            setTableValue();
-            getFormData();
+        } else if (type == "card") {
+            jQuery('#fio-section').hide();
             jQuery('#first_step').hide(350);
-            jQuery('#three_step').show(350);
+            jQuery('#second_step').show(350);
 
         } else {
             getPaymentSetting();
@@ -37,14 +36,14 @@ jQuery(document).ready(function() {
 
     });
 
-    jQuery('#back_second_step').click(function() {
+    jQuery('#back_second_step').click(function () {
 
         jQuery('#first_step').show(350);
         jQuery('#second_step').hide(350);
 
     });
 
-    jQuery('#btn_second_step').click(function() {
+    jQuery('#btn_second_step').click(function () {
 
         setTableValue();
         getFormData();
@@ -53,15 +52,14 @@ jQuery(document).ready(function() {
 
     });
 
-    jQuery('#back_three_step').click(function() {
+    jQuery('#back_three_step').click(function () {
 
 
         let type = jQuery('input[name=payment_method]:checked').attr('data-type');
 
-        if (type == "Интернет-эквайринг") {
+        if (type == "card") {
             jQuery('#first_step').show(350);
             jQuery('#three_step').hide(350);
-
         } else {
             jQuery('#second_step').show(350);
             jQuery('#three_step').hide(350);
@@ -70,7 +68,7 @@ jQuery(document).ready(function() {
 
     });
 
-    jQuery('#replay_btn').click(function() {
+    jQuery('#replay_btn').click(function () {
         let url = window.location.href;
 
         let expressPayAccountNumber = GetParameterValues('ExpressPayAccountNumber');
@@ -84,7 +82,8 @@ jQuery(document).ready(function() {
     });
 
     function setTableValue() {
-        let type = jQuery('#first_step input[name=payment_method]:checked').attr('data-type');
+    
+        let type = jQuery("input[type='radio']:checked:last").next().text();
 
         jQuery('#three_step .table .row.type .val').html(type);
 
@@ -100,12 +99,13 @@ jQuery(document).ready(function() {
         let last_name = jQuery('#expresspay-payment-last-name').val();
         let first_name = jQuery('#expresspay-payment-name').val();
         let patronymic = jQuery('#expresspay-payment-secondname').val();
+        let info = jQuery('#expresspay-payment-purpose').val();
         let email = jQuery('#expresspay-payment-email').val();
         let phone = jQuery('#expresspay-payment-phone').val();
 
         let url = jQuery('#ajax-url').val();
 
-        jQuery(function($) {
+        jQuery(function ($) {
             $.ajax({
                 type: "GET",
                 url: url,
@@ -116,12 +116,12 @@ jQuery(document).ready(function() {
                     last_name: last_name,
                     first_name: first_name,
                     patronymic: patronymic,
+                    info: info,
                     email: email,
                     phone: phone,
                     url: window.location.href
                 },
-                success: function(response) {
-                    //console.log('AJAX response : ', response);
+                success: function (response) {
                     jQuery('#service_message').css('visibility', 'hidden');
                     jQuery('#expresspay-payment-submit-btn').css('visibility', 'visible');
                     response = $.parseJSON(response);
@@ -133,7 +133,6 @@ jQuery(document).ready(function() {
     }
 
     function setFormValue(options) {
-        //console.log('Options : ', options);
         jQuery('#expresspay-payment-form').attr('action', options.Action);
         jQuery('#expresspay-payment-service-id').val(options.ServiceId);
         jQuery('#expresspay-payment-account-no').val(options.AccountNo);
@@ -172,7 +171,7 @@ jQuery(document).ready(function() {
         jQuery('#response_step').show(350);
         jQuery('#replay_btn').hide(800);
 
-        jQuery(function($) {
+        jQuery(function ($) {
             $.ajax({
                 type: "GET",
                 url: url,
@@ -183,7 +182,7 @@ jQuery(document).ready(function() {
                     account_no: account_no,
                     invoice_no: invoice_no
                 },
-                success: function(data) {
+                success: function (data) {
                     data = $.parseJSON(data);
 
                     if (data.status == "success") {
@@ -210,12 +209,12 @@ jQuery(document).ready(function() {
 
         let type = jQuery('#first_step input[name=payment_method]:checked').attr('data-type');
 
-        if (type == "Интернет-эквайринг")
+        if (type == 'card')
             return;
 
         let url = jQuery('#ajax-url').val();
 
-        jQuery(function($) {
+        jQuery(function ($) {
             $.ajax({
                 type: "GET",
                 url: url,
@@ -223,7 +222,7 @@ jQuery(document).ready(function() {
                     action: 'get_payment_setting',
                     type_id: type_id,
                 },
-                success: function(response) {
+                success: function (response) {
 
                     response = $.parseJSON(response);
 
@@ -237,16 +236,11 @@ jQuery(document).ready(function() {
     function setSecondStepFields(data) {
 
         if (data.SendEmail == 1) {
-            jQuery('.expresspay-payment-email').show();
-        } else {
-            jQuery('.expresspay-payment-email').hide();
-
-        }
+            jQuery('#expresspay-payment-email-container').show(400);
+        } 
 
         if (data.SendSms == 1) {
-            jQuery('.expresspay-payment-phone').show();
-        } else {
-            jQuery('.expresspay-payment-phone').hide();
+            jQuery('#expresspay-payment-phone-container').show(400);
         }
 
     }

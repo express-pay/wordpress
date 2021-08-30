@@ -1,4 +1,4 @@
-jQuery(document).ready(function() {
+jQuery(document).ready(function () {
 
     showCurrentSection();
 
@@ -16,28 +16,32 @@ jQuery(document).ready(function() {
         .addEventListener("change", showCurrentSection);
 
     function showCurrentSection() {
-        let selected_value = jQuery('#payment_setting_type option:selected').val();
+        let selected_value = jQuery('#payment_setting_type').val();
 
         let current_section = '';
-        switch (selected_value) {
-            case 'ЕРИП':
-                jQuery('#erip_setting').show(400);
-                current_section = 'erip_setting';
-                break;
-            case 'Интернет-эквайринг':
-                jQuery('#successMessageContainer').hide(400);
-                break;
-            case 'E-POS':
-                jQuery('#epos_setting').show(400);
-                jQuery('#erip_setting').show(400);
-                jQuery('#showQrCodeContainer').hide(400);
-                jQuery('#successMessageContainer').hide(400);
-                current_section = 'epos_setting';
-                break;
 
+        console.log(selected_value);
+
+        if (selected_value == 'erip')
+        {
+            jQuery('#erip_setting').show(400);
+            jQuery('#successMessageContainer').show(400);
+            current_section = 'erip_setting';
+        } else if (selected_value == 'card')
+        {
+            jQuery('#successMessageContainer').hide(400);
+        } else if (selected_value == 'epos')
+        {
+            jQuery('#epos_setting').show(400);
+            jQuery('#erip_setting').show(400);
+            jQuery('#showQrCodeContainer').hide(400);
+            jQuery('#successMessageContainer').hide(400);
+            current_section = 'epos_setting';
+        } else {
+            jQuery('#successMessageContainer').hide(400);
         }
 
-        jQuery('.other_setting').each(function() {
+        jQuery('.other_setting').each(function () {
 
 
             if (current_section == 'epos_setting' && jQuery(this).attr('id') == 'erip_setting') {
