@@ -16,10 +16,31 @@ class ExpressPayPaymentSettingsList
 
         $response = $wpdb->get_results("SELECT id, name, type, isactive FROM $table_name");
 
-        $url = get_option('expresspay_plugin_ult');
+        if (count($response) == 0) {
+            ExpressPay::view(
+                'admin/payment_method_empty',
+                array(
+                    'url' => get_option('expresspay_plugin_ult')
+                )
+            );
+        } else {
+            ExpressPay::view(
+                'admin/payment_method',
+                array(
+                    'response' => $response,
+                    'url' => get_option('expresspay_plugin_ult'),
+                    'ajax_url' => admin_url('admin-ajax.php')
+                )
+            );
+        }
 
-        if (isset(($_GET['action']))) {
-            switch (sanitize_text_field($_GET['action'])) {
+        ExpressPay::view('admin/admin_footer');
+    }
+
+    static function payment_setting_options()
+    {
+        if (isset(($_GET['method']))) {
+            switch (sanitize_text_field($_GET['method'])) {
                 case 'payment_setting_on':
                     global $wpdb;
 
@@ -28,16 +49,10 @@ class ExpressPayPaymentSettingsList
                     $wpdb->update(
                         $table_name,
                         array('isactive' => 1),
-                        array('id' => sanitize_text_field($_REQUEST['id'])),
+                        array('id' => sanitize_text_field($_GET['id'])),
                         array('%d'),
                         array('%d')
                     );
-
-?>
-                    <script>
-                        window.location.href = '<?php echo esc_html($url); ?>';
-                    </script>
-                <?php
                     break;
                 case 'payment_setting_off':
                     global $wpdb;
@@ -47,41 +62,22 @@ class ExpressPayPaymentSettingsList
                     $wpdb->update(
                         $table_name,
                         array('isactive' => 0),
-                        array('id' => sanitize_text_field($_REQUEST['id'])),
+                        array('id' => sanitize_text_field($_GET['id'])),
                         array('%d'),
                         array('%d')
                     );
-
-                ?>
-                    <script>
-                        window.location.href = '<?php echo esc_html($url); ?>';
-                    </script>
-                <?php
                     break;
                 case 'payment_setting_delete':
                     global $wpdb;
 
                     $table_name = $wpdb->prefix . "expresspay_options";
 
-                    $wpdb->delete($table_name, array('id' => sanitize_text_field($_REQUEST['id'])), array('%d'));
-                ?>
-                    <script>
-                        window.location.href = '<?php echo esc_html($url); ?>';
-                    </script>
-<?php
+                    $wpdb->delete($table_name, array('id' => sanitize_text_field($_GET['id'])), array('%d'));
                     break;
                 default:
                     update_option('expresspay_plugin_ult', $_SERVER['REQUEST_URI']);
                     break;
             }
         }
-
-        if (count($response) == 0) {
-            ExpressPay::view('admin/payment_method_empty', array('url' => get_option('expresspay_plugin_ult')));
-        } else {
-            ExpressPay::view('admin/payment_method', array('response' => $response, 'url' => get_option('expresspay_plugin_ult'), 'ajax_url' => admin_url('admin-ajax.php')));
-        }
-
-        ExpressPay::view('admin/admin_footer');
     }
 }

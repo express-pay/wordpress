@@ -1,9 +1,9 @@
 <div class="row navbar">
     <div class="col-md-2">
-        <a href="<?php echo esc_html($url . '&page=expresspay-payment'); ?>"><?php esc_html_e('Home', 'wordpress_expresspay') ?></a>
+        <a href="<?php echo esc_html($url . '?page=expresspay-payment'); ?>"><?php esc_html_e('Home', 'wordpress_expresspay') ?></a>
     </div>
     <div class="col-md-2">
-        <a href="<?php echo esc_html($url . '&page=invoices-and-payments'); ?>"><?php esc_html_e('Invoices and payemnts', 'wordpress_expresspay') ?></a>
+        <a href="<?php echo esc_html($url . '?page=invoices-and-payments'); ?>"><?php esc_html_e('Invoices and payemnts', 'wordpress_expresspay') ?></a>
     </div>
     <div class="col-md-2">
         <a href="#" class="current"><?php esc_html_e('Settings', 'wordpress_expresspay') ?></a>
@@ -17,8 +17,8 @@
     <a href="#" onclick="window.history.back()"><?php esc_html_e('Back', 'wordpress_expresspay') ?></a>
 </div>
 <div class="row action-link-title-grid">
-    <div class="col-md-2">
-        <a href="<?php echo esc_html($url . '&page=payment-settings&id=0'); ?>" class="add-link"><?php esc_html_e('Add a payment method', 'wordpress_expresspay') ?></a>
+    <div class="col-md-3">
+        <a href="<?php echo esc_html($url . '?page=payment-settings&id=0'); ?>"><?php esc_html_e('Add a payment method', 'wordpress_expresspay') ?></a>
     </div>
 </div>
 <div class="row">

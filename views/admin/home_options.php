@@ -23,10 +23,10 @@
             <a href="#" class="current"><?php esc_html_e('Home', 'wordpress_expresspay') ?></a>
         </div>
         <div class="col-md-2">
-            <a href="<?php echo esc_html($url . '&page=invoices-and-payments'); ?>"><?php esc_html_e('Invoices and payemnts', 'wordpress_expresspay') ?></a>
+            <a href="<?php echo esc_html($url . '?page=invoices-and-payments'); ?>"><?php esc_html_e('Invoices and payemnts', 'wordpress_expresspay') ?></a>
         </div>
         <div class="col-md-2">
-            <a href="<?php echo esc_html($url . '&page=payment-settings-list'); ?>"><?php esc_html_e('Settings', 'wordpress_expresspay') ?></a>
+            <a href="<?php echo esc_html($url . '?page=payment-settings-list'); ?>"><?php esc_html_e('Settings', 'wordpress_expresspay') ?></a>
         </div>
         <div class="col-md-2">
             <a target="_blank" href="<?php echo esc_html('https://express-pay.by/extensions/wordpress/erip'); ?>"><?php esc_html_e('Help', 'wordpress_expresspay') ?></a>
@@ -36,10 +36,10 @@
     <div class="home-page">
         <div class="wrap-menu">
             <ul>
-                <li class="menu_2"><a href="<?php echo esc_html($url . '&page=invoices-and-payments'); ?>">
+                <li class="menu_2"><a href="<?php echo esc_html($url . '?page=invoices-and-payments'); ?>">
                         <div class="text"><?php esc_html_e('Invoices and', 'wordpress_expresspay') ?> <br /> <?php esc_html_e('payemnts', 'wordpress_expresspay') ?></div>
                     </a></li>
-                <li class="menu_3"><a href="<?php echo esc_html($url . '&page=payment-settings-list'); ?>">
+                <li class="menu_3"><a href="<?php echo esc_html($url . '?page=payment-settings-list'); ?>">
                         <div class="text"> <?php esc_html_e('Settings', 'wordpress_expresspay') ?> </div>
                     </a></li>
             </ul>

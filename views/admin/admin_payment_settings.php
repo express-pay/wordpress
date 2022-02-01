@@ -1,12 +1,12 @@
 <div class="row navbar">
     <div class="col-md-2">
-        <a href="<?php echo esc_html($url . '&page=expresspay-payment'); ?>"><?php esc_html_e('Home', 'wordpress_expresspay') ?></a>
+        <a href="<?php echo esc_html($url . '?page=expresspay-payment'); ?>"><?php esc_html_e('Home', 'wordpress_expresspay') ?></a>
     </div>
     <div class="col-md-2">
-        <a href="<?php echo esc_html($url . '&page=invoices-and-payments'); ?>"><?php esc_html_e('Invoices and payemnts', 'wordpress_expresspay') ?></a>
+        <a href="<?php echo esc_html($url . '?page=invoices-and-payments'); ?>"><?php esc_html_e('Invoices and payemnts', 'wordpress_expresspay') ?></a>
     </div>
     <div class="col-md-2">
-        <a href="<?php echo esc_html($url . '&page=payment-settings-list'); ?>" class="current"><?php esc_html_e('Settings', 'wordpress_expresspay') ?></a>
+        <a href="<?php echo esc_html($url . '?page=payment-settings-list'); ?>" class="current"><?php esc_html_e('Settings', 'wordpress_expresspay') ?></a>
     </div>
     <div class="col-md-2">
         <a target="_blank" href="<?php echo esc_html('https://express-pay.by/extensions/wordpress/erip'); ?>"><?php esc_html_e('Help', 'wordpress_expresspay') ?></a>
@@ -17,7 +17,7 @@
     <a href="#" onclick="window.history.back()"><?php esc_html_e('Back', 'wordpress_expresspay') ?></a>
 </div>
 <input type="hidden" id="ajax-url" value="<?php echo esc_html($ajax_url); ?>" />
-<form class="payment_setting_save_page" id="payment_setting_save_page" method="post" action="<?php echo esc_html($url); ?>&page=payment-settings&id=<?php echo esc_html(sanitize_text_field($_GET['id'])); ?>">
+<form class="payment_setting_save_page" id="payment_setting_save_page" method="post" action="<?php echo esc_html($url); ?>?page=payment-settings&id=<?php echo esc_html(sanitize_text_field($_GET['id'])); ?>">
     <div class="row">
         <div class="col-md-3 col-xs-12">
             <label for="payment_setting_name">
@@ -253,7 +253,7 @@
     <div class="row">
         <div class="col-md-offset-5 col-md-7">
             <input class="button-blue button-action" type="submit" value="<?php esc_html_e('Save', 'wordpress_expresspay') ?>">
-            <input class="button-orange button-action" style="margin-left: 4px;" type="button" onclick="window.location.href='<?php echo esc_html($url . '&page=payment-settings-list'); ?>'" value="<?php esc_html_e('Cancel', 'wordpress_expresspay') ?>">
+            <input class="button-orange button-action" style="margin-left: 4px;" type="button" onclick="window.location.href='<?php echo esc_html($url . '?page=payment-settings-list'); ?>'" value="<?php esc_html_e('Cancel', 'wordpress_expresspay') ?>">
         </div>
     </div>
 

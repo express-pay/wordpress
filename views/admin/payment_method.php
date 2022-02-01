@@ -14,10 +14,10 @@
 </style>
 <div class="row navbar">
     <div class="col-md-2">
-        <a href="<?php echo esc_html($url . '&page=expresspay-payment'); ?>"><?php esc_html_e('Home', 'wordpress_expresspay') ?></a>
+        <a href="<?php echo esc_html('?page=expresspay-payment'); ?>"><?php esc_html_e('Home', 'wordpress_expresspay') ?></a>
     </div>
     <div class="col-md-2">
-        <a href="<?php echo esc_html($url . '&page=invoices-and-payments'); ?>"><?php esc_html_e('Invoices and payemnts', 'wordpress_expresspay') ?></a>
+        <a href="<?php echo esc_html($url . '?page=invoices-and-payments'); ?>"><?php esc_html_e('Invoices and payemnts', 'wordpress_expresspay') ?></a>
     </div>
     <div class="col-md-2">
         <a href="#" class="current"><?php esc_html_e('Settings', 'wordpress_expresspay') ?></a>
@@ -31,7 +31,7 @@
     <a href="#" onclick="window.history.back()"><?php esc_html_e('Back', 'wordpress_expresspay') ?></a>
 </div>
 <div class="add_pay_method_link">
-    <a href="<?php echo esc_html($url . '&page=payment-settings&id=0'); ?>" class="add-link"><?php esc_html_e('Add a payment method', 'wordpress_expresspay') ?></a>
+    <a href="<?php echo esc_html($url . '?page=payment-settings&id=0'); ?>"><?php esc_html_e('Add a payment method', 'wordpress_expresspay') ?></a>
 </div>
 <div class="row">
     <div class="header-table col-md-12">
@@ -64,15 +64,15 @@
                     <?php endif; ?>
                 </div>
                 <div class="col-md-4">
-                    <a class="icon icon_edit" title="<?php esc_html_e('Edit', 'wordpress_expresspay') ?>" href="<?php echo esc_html($url); ?>&page=payment-settings&id=<?php echo esc_html($row->id); ?>"></a>
+                    <a class="icon icon_edit" title="<?php esc_html_e('Edit', 'wordpress_expresspay') ?>" href="?page=payment-settings&id=<?php echo esc_html($row->id); ?>"></a>
                     <?php
                     if ($row->isactive == 1) :
                     ?>
-                        <a class="icon icon_stop" title="<?php esc_html_e('Disable', 'wordpress_expresspay') ?>" href="<?php echo esc_html($url); ?>&page=payment-settings-list&action=payment_setting_off&id=<?php echo esc_html($row->id); ?>"></a>
+                        <a class="icon icon_stop" onclick="paymentMethodOptions('payment_setting_off', <?php echo esc_html($row->id); ?>)" title="<?php esc_html_e('Disable', 'wordpress_expresspay') ?>"></a>
                     <?php else : ?>
-                        <a class="icon icon_on" title="<?php esc_html_e('Enable', 'wordpress_expresspay') ?>" href="<?php echo esc_html($url); ?>&page=payment-settings-list&action=payment_setting_on&id=<?php echo esc_html($row->id); ?>"></a>
+                        <a class="icon icon_on"  onclick="paymentMethodOptions('payment_setting_on', <?php echo esc_html($row->id); ?>)" title="<?php esc_html_e('Enable', 'wordpress_expresspay') ?>"></a>
                     <?php endif; ?>
-                    <a class="icon icon_delete" title="<?php esc_html_e('Delete', 'wordpress_expresspay') ?>" href="<?php echo esc_html($url); ?>&page=payment-settings-list&action=payment_setting_delete&id=<?php echo esc_html($row->id); ?>"></a>
+                    <a class="icon icon_delete"  onclick="paymentMethodOptions('payment_setting_delete', <?php echo esc_html($row->id); ?>)" title="<?php esc_html_e('Delete', 'wordpress_expresspay') ?>"></a>
                 </div>
             </div>
         <?php endforeach; ?>

@@ -57,9 +57,13 @@ class ExpressPayPayment
             $url = sanitize_text_field($_REQUEST['url']);
             $info = sanitize_text_field($_REQUEST['info']);
 
-            $client_phone = preg_replace('/[^0-9]/', '', $phone);
-			$client_phone = substr($client_phone, -9);
-			$client_phone = "375$client_phone";
+            if ($options->SendSms)
+            {
+                $client_phone = preg_replace('/[^0-9]/', '', $phone);
+                $client_phone = substr($client_phone, -9);
+                $client_phone = "375$client_phone";
+            }
+
 
             $signatureParams = array(
                 "Token" => $options->Token,
@@ -69,8 +73,8 @@ class ExpressPayPayment
                 "Currency" => 933,
                 "Info" => $info,
                 "ReturnType" => "redirect",
-                "ReturnUrl" => add_query_arg(['type_id' => $type_id], $url),
-                "FailUrl" => add_query_arg(['type_id' => $type_id], $url),
+                "ReturnUrl" => add_query_arg(['type_id' => $type_id, 'result' => 1], $url),
+                "FailUrl" => add_query_arg(['type_id' => $type_id, 'result' => 0], $url),
                 "Action" => $options->TestMode == 1 ? $options->SandboxUrl : $options->ApiUrl
             );
 
@@ -243,7 +247,7 @@ class ExpressPayPayment
         $epos_code .= $account_no;
 
         $message_success_epos = str_replace("##qr_code##", '<img src="data:image/jpeg;base64,' . $qr_code . '"  width="200" height="200"/>', $message_success_epos);
-        $message_success_epos = str_replace("##epos_code##", $epos_code, $message_success_epos,);
+        $message_success_epos = str_replace("##epos_code##", $epos_code, $message_success_epos);
 
         return $message_success_epos;
     }

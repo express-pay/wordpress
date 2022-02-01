@@ -143,7 +143,7 @@ class ExpressPayPaymentSettings
         }
 ?>
         <script>
-            window.location.href = '<?php echo esc_html($url); ?>&page=payment-settings-list';
+            window.location.href = '<?php echo esc_html($url); ?>?page=payment-settings-list';
         </script>
 <?php
     }

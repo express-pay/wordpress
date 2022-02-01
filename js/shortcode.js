@@ -1,14 +1,14 @@
 jQuery(document).ready(function () {
     let expressPayAccountNumber = GetParameterValues('ExpressPayAccountNumber');
+    let type_id = GetParameterValues('type_id');
+    let expressPayInvoiceNo = GetParameterValues('ExpressPayInvoiceNo');
+    let signature = GetParameterValues('Signature');
+    let result = GetParameterValues('result');
 
-    if (expressPayAccountNumber != null) {
-        let expressPayInvoiceNo = GetParameterValues('ExpressPayInvoiceNo');
-        let signature = GetParameterValues('Signature');
-        let type_id = GetParameterValues('type_id');
-
+    if (result == true) {
         checkInvoice(signature, expressPayAccountNumber, expressPayInvoiceNo, type_id);
-    } else {
-
+    } else if (result == false) {
+        checkInvoice(signature, expressPayAccountNumber, expressPayInvoiceNo, type_id);
     }
 
     jQuery('#expresspay-payment-submit-btn').click(function () {

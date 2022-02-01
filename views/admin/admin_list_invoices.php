@@ -1,12 +1,12 @@
 <div class="row navbar">
     <div class="col-md-2">
-        <a href="<?php echo esc_html($url . '&page=expresspay-payment'); ?>"><?php esc_html_e('Home', 'wordpress_expresspay') ?></a>
+        <a href="<?php echo esc_html($url . '?page=expresspay-payment'); ?>"><?php esc_html_e('Home', 'wordpress_expresspay') ?></a>
     </div>
     <div class="col-md-2">
         <a href="#" class="current"><?php esc_html_e('Invoices and payemnts', 'wordpress_expresspay') ?></a>
     </div>
     <div class="col-md-2">
-        <a href="<?php echo esc_html($url . '&page=payment-settings-list'); ?>"><?php esc_html_e('Settings', 'wordpress_expresspay') ?></a>
+        <a href="<?php echo esc_html($url . '?page=payment-settings-list'); ?>"><?php esc_html_e('Settings', 'wordpress_expresspay') ?></a>
     </div>
     <div class="col-md-2">
         <a target="_blank" href="<?php echo esc_html('https://express-pay.by/extensions/wordpress/erip'); ?>"><?php esc_html_e('Help', 'wordpress_expresspay') ?></a>

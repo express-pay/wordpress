@@ -63,5 +63,21 @@ jQuery(document).ready(function () {
         jQuery('#payment_setting_token').val("");
         jQuery('#payment_setting_service_id').val("");
     }
-
 });
+
+function paymentMethodOptions(method, id) {
+    jQuery(function ($) {
+        $.ajax({
+            type: "GET",
+            url: ajaxurl,
+            data: {
+                action: 'payment_options',
+                method: method,
+                id: id,
+            },
+            success: function (response) {
+                location.reload();
+            }
+        });
+    });
+}
