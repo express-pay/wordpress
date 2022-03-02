@@ -1,10 +1,10 @@
-<div class="expresspay-payment" id="expresspay-payment" style="max-width: 80%;">
+<div class="expresspay-payment" id="expresspay-payment">
     <div class="expresspay-payment-header">
         <div class="logo">
-            <img src="<?php echo esc_html(plugins_url('admin/img/logo.png', __FILE__)); ?>" alt="exspress-pay.by" title="express-pay.by" width="216" height="55">
+            <img src="<?php echo esc_html(plugins_url('admin/img/logo.png', __FILE__)); ?>" alt="exspress-pay.by" title="express-pay.by">
         </div>
         <div class="desc">
-            <p><?php esc_html_e('Payment using the Express payments service', 'wordpress_expresspay') ?></p>
+            <p><?php esc_html_e('Payment using the «Express payments service»', 'wordpress_expresspay') ?></p>
         </div>
     </div>
     <div class="row error_panel">
@@ -34,10 +34,7 @@
             <button class="confirm_btn" id="btn_step_first"><?php esc_html_e('Further', 'wordpress_expresspay') ?></button>
         </div>
     </div>
-    <div class="secont_step" id="second_step">
-        <div class="row back_link">
-            <i id="back_second_step"><?php esc_html_e('Back', 'wordpress_expresspay') ?></a>
-        </div>
+    <div class="secont_step" id="second_step">      
         <div class="fio-section" id='fio-section'>
             <div class="row">
                 <div class="label">
@@ -89,13 +86,11 @@
             </div>
         </div>
         <div class="row">
-            <button id="btn_second_step"><?php esc_html_e('Checkout', 'wordpress_expresspay') ?></button>
+            <button class="confirm_btn" id="back_second_step"><?php esc_html_e('Back', 'wordpress_expresspay') ?></button>
+            <button class="confirm_btn" id="btn_second_step"><?php esc_html_e('Checkout', 'wordpress_expresspay') ?></button>
         </div>
     </div>
-    <div class="three_step" id="three_step">
-        <div class="row back_link">
-            <i id="back_three_step"><?php esc_html_e('Back', 'wordpress_expresspay') ?></a>
-        </div>
+    <div class="three_step" id="three_step">      
         <div class="table">
             <div class="row type">
                 <div class="desc">
@@ -133,8 +128,9 @@
                 <p id="service_message"><?php esc_html_e('Whait second...', 'wordpress_expresspay') ?></p>
             </div>
 
-            <div class="row">
-                <input style="visibility:hidden" type="submit" id="expresspay-payment-submit-btn" value="<?php esc_html_e('Pay', 'wordpress_expresspay') ?>" />
+            <div class="row">	
+				<button class="confirm_btn back_link" id="back_three_step"><?php esc_html_e('Back', 'wordpress_expresspay') ?></button>	
+                <input class="confirm_btn" style="visibility:hidden" type="submit" id="expresspay-payment-submit-btn" value="<?php esc_html_e('Pay', 'wordpress_expresspay') ?>" />
             </div>
         </form>
     </div>
@@ -144,7 +140,7 @@
             <p id="response_message"></p>
         </div>
         <div class="row">
-            <button class="btn" id="replay_btn"><?php esc_html_e('Repeat', 'wordpress_expresspay') ?></button>
+            <button class="btn confirm_btn" id="replay_btn"><?php esc_html_e('Repeat', 'wordpress_expresspay') ?></button>
         </div>
     </div>
 </div>

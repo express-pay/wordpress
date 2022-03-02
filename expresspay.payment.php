@@ -3,7 +3,7 @@
 Plugin Name: ExpressPay Payment Module
 Plugin URI: https://express-pay.by/cms-extensions/wordpress
 Description: Place the plugin shortcode at any of your pages and start to accept payments in WordPress instantly
-Version: 1.1.2
+Version: 1.1.4
 Author: LLC «TriIncom»
 Author URI: https://express-pay.by
 Text Domain: wordpress_expresspay

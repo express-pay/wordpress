@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: ExpressPay Payment Module\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-30 09:54+0000\n"
-"PO-Revision-Date: 2021-08-30 12:18+0000\n"
+"PO-Revision-Date: 2022-03-02 06:21+0000\n"
 "Last-Translator: \n"
 "Language-Team: Русский\n"
 "Language: ru_RU\n"
@@ -16,7 +16,7 @@ msgstr ""
 "X-Loco-Version: 2.5.3; wp-5.8\n"
 "X-Domain: wordpress_expresspay"
 
-#: src/class.expresspay.payment.php:229
+#: src/class.expresspay.payment.php:233
 msgid ""
 "<h3>Account added to the E-POS system for payment</h3>\n"
 "\t\t\t\t<h4>Your order number: ##epos_code##</h4>\n"
@@ -59,7 +59,7 @@ msgstr ""
 "\t\t\t\t <p>##qr_code##</p><p><b>Отсканируйте QR-код для оплаты</b></p></td>"
 "</tr></tbody></table>"
 
-#: src/class.expresspay.payment.php:189
+#: src/class.expresspay.payment.php:193
 msgid ""
 "<h3>Account added to the ERIP system for payment</h3>\n"
 "        <h4>Your order number: ##order_id##</h4>\n"
@@ -123,13 +123,13 @@ msgstr "Разрешено изменять сумму оплаты"
 msgid "Allowed to change name"
 msgstr "Разрешено изменять ФИО плательщика"
 
-#: views/payment_form.php:27 views/payment_form.php:108
+#: views/payment_form.php:27 views/payment_form.php:103
 #: views/admin/admin_list_invoices.php:22
 #: views/admin/admin_list_invoices_emty.php:22
 msgid "Amount"
 msgstr "Сумма"
 
-#: src/class.expresspay.payment.php:169
+#: src/class.expresspay.payment.php:173
 msgid "An error occurred during the billing process"
 msgstr "Произошла ошибка при выставлении счета"
 
@@ -145,7 +145,7 @@ msgstr "API ключ"
 msgid "Awaiting payment"
 msgstr "Ожидает оплаты"
 
-#: views/payment_form.php:39 views/payment_form.php:97
+#: views/payment_form.php:89 views/payment_form.php:132
 #: views/admin/admin_list_invoices.php:17
 #: views/admin/admin_list_invoices_emty.php:17
 #: views/admin/admin_payment_settings.php:17 views/admin/payment_method.php:31
@@ -161,7 +161,7 @@ msgstr "Отменить"
 msgid "Canceled"
 msgstr "Отменен"
 
-#: views/payment_form.php:92
+#: views/payment_form.php:90
 msgid "Checkout"
 msgstr "Оформить"
 
@@ -182,7 +182,7 @@ msgstr "Отключить"
 msgid "During"
 msgstr "В процессе"
 
-#: views/payment_form.php:77
+#: views/payment_form.php:74
 msgid "E-mail"
 msgstr "E-mail"
 
@@ -218,7 +218,7 @@ msgstr "Введите адрес API"
 msgid "Enter API key"
 msgstr "Введите ключ API"
 
-#: views/payment_form.php:80
+#: views/payment_form.php:77
 msgid "Enter e-mail"
 msgstr "Введите e-mail"
 
@@ -226,11 +226,11 @@ msgstr "Введите e-mail"
 msgid "Enter E-POS service code"
 msgstr "Введите код E-POS"
 
-#: views/payment_form.php:88
+#: views/payment_form.php:85
 msgid "Enter mobile number"
 msgstr "Введите номер мобильного телефона"
 
-#: views/payment_form.php:55
+#: views/payment_form.php:52
 msgid "Enter name"
 msgstr "Введите имя"
 
@@ -238,11 +238,11 @@ msgstr "Введите имя"
 msgid "Enter Path along the ERIP branch"
 msgstr "Введите путь по ветке ЕРИП"
 
-#: views/payment_form.php:72
+#: views/payment_form.php:69
 msgid "Enter purpose of payment"
 msgstr "Введите назначение платежа"
 
-#: views/payment_form.php:63
+#: views/payment_form.php:60
 msgid "Enter second name"
 msgstr "Введите отчество"
 
@@ -262,7 +262,7 @@ msgstr "Введите номер услуги"
 msgid "Enter service provider code"
 msgstr "Введите код услуги E-POS"
 
-#: views/payment_form.php:47
+#: views/payment_form.php:44
 msgid "Enter surname"
 msgstr "Введите фамилию"
 
@@ -282,7 +282,7 @@ msgstr "ЕРИП"
 msgid "Expired"
 msgstr "Истек"
 
-#: expresspay.payment.php:66 expresspay.payment.php:67
+#: expresspay.payment.php:69 expresspay.payment.php:70
 msgid "Express Payments"
 msgstr "Экспресс Платежи"
 
@@ -301,7 +301,7 @@ msgstr "Далее"
 msgid "Help"
 msgstr "Помощь"
 
-#: expresspay.payment.php:76 expresspay.payment.php:77
+#: expresspay.payment.php:79 expresspay.payment.php:80
 #: views/admin/admin_list_invoices.php:3
 #: views/admin/admin_list_invoices_emty.php:3
 #: views/admin/admin_payment_settings.php:3 views/admin/home_options.php:23
@@ -325,7 +325,7 @@ msgstr "Интернет-эквайринг"
 msgid "Invoices and"
 msgstr "Счета и "
 
-#: expresspay.payment.php:85 expresspay.payment.php:86
+#: expresspay.payment.php:88 expresspay.payment.php:89
 #: views/admin/admin_list_invoices.php:6
 #: views/admin/admin_list_invoices_emty.php:6
 #: views/admin/admin_payment_settings.php:6 views/admin/home_options.php:26
@@ -337,11 +337,11 @@ msgstr "Счета и платежи"
 msgid "LLC «TriIncom»"
 msgstr "ООО «ТриИнком»"
 
-#: views/payment_form.php:85
+#: views/payment_form.php:82
 msgid "Mobile number"
 msgstr "Номер мобильного"
 
-#: views/payment_form.php:52 views/admin/payment_method.php:38
+#: views/payment_form.php:49 views/admin/payment_method.php:38
 #: views/admin/payment_method_empty.php:26
 msgid "Name"
 msgstr "Имя"
@@ -370,7 +370,7 @@ msgstr "Оплачен банковской картой"
 msgid "Path along the ERIP branch"
 msgstr "Путь по ветке ЕРИП"
 
-#: views/payment_form.php:137
+#: views/payment_form.php:133
 msgid "Pay"
 msgstr "Оплатить"
 
@@ -383,7 +383,7 @@ msgstr "платежи"
 msgid "Payment date"
 msgstr "Дата оплаты"
 
-#: views/payment_form.php:102
+#: views/payment_form.php:97
 msgid "Payment method"
 msgstr "Метод оплаты"
 
@@ -395,9 +395,13 @@ msgstr "Название метода оплаты"
 msgid "Payment method type"
 msgstr "Тип метода оплаты"
 
-#: views/payment_form.php:7 views/payment_method_empty.php:7
+#: views/payment_method_empty.php:7
 msgid "Payment using the Express payments service"
-msgstr "Оплата с помощью сервиса Экспресс Платежи"
+msgstr "Оплата с помощью сервиса «Экспресс Платежи»"
+
+#: views/payment_form.php:7
+msgid "Payment using the «Express payments service»"
+msgstr "Оплата с помощью сервиса «Экспресс Платежи»"
 
 #. Description of the plugin
 msgid ""
@@ -407,11 +411,11 @@ msgstr ""
 "Разместите шорткод плагина на любой из своих страниц чтобы мгновенно начать "
 "принимать платежи в WordPress."
 
-#: views/payment_form.php:69
+#: views/payment_form.php:66
 msgid "Purpose of payment"
 msgstr "Назначение платежа"
 
-#: views/payment_form.php:147
+#: views/payment_form.php:143
 msgid "Repeat"
 msgstr "Повторить"
 
@@ -419,11 +423,11 @@ msgstr "Повторить"
 msgid "Save"
 msgstr "Сохранить"
 
-#: src/class.expresspay.payment.php:207
+#: src/class.expresspay.payment.php:211
 msgid "Scan the QR code to pay"
 msgstr "Отсканируйте QR-код для оплаты"
 
-#: views/payment_form.php:60
+#: views/payment_form.php:57
 msgid "Second name"
 msgstr "Отчество"
 
@@ -459,8 +463,8 @@ msgstr "Код производителя услуг"
 msgid "Service «Express Payments»"
 msgstr "Сервис «Экспресс Платежи»"
 
-#: expresspay.payment.php:94 expresspay.payment.php:95
-#: expresspay.payment.php:103 expresspay.payment.php:104
+#: expresspay.payment.php:97 expresspay.payment.php:98
+#: expresspay.payment.php:106 expresspay.payment.php:107
 #: src/class.payment.settings.php:16 views/admin/admin_list_invoices.php:9
 #: views/admin/admin_list_invoices_emty.php:9
 #: views/admin/admin_payment_settings.php:9 views/admin/home_options.php:29
@@ -479,7 +483,7 @@ msgstr "Показывать QR-код"
 msgid "Status"
 msgstr "Статус"
 
-#: views/payment_form.php:44
+#: views/payment_form.php:41
 msgid "Surname"
 msgstr "Фамилия"
 
@@ -491,7 +495,7 @@ msgstr "Адрес тестового API"
 msgid "Test mode"
 msgstr "Тестовый режим"
 
-#: src/class.expresspay.payment.php:160
+#: src/class.expresspay.payment.php:164
 msgid "The invoice has been successfully paid!"
 msgstr "Счет успешно оплачен!"
 
@@ -507,7 +511,7 @@ msgstr "Для получения добавьте способ оплаты"
 msgid "Type of"
 msgstr "Тип"
 
-#: views/payment_form.php:133 views/payment_form.php:143
+#: views/payment_form.php:128 views/payment_form.php:139
 msgid "Whait second..."
 msgstr "Подождите секунду..."
 

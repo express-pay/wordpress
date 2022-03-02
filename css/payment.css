@@ -1,29 +1,70 @@
 .expresspay-payment {
-    border: 1px solid black;
+    border: 1px solid #b8b8b8;
     border-radius: 5px;
-    padding: 10px;
+    padding: 20px;
     background-color: #fff;
     display: flex;
     flex-direction: column;
+	
+    font-style: normal;
+    font-weight: normal;
 }
 
 .expresspay-payment select {
     width: 100%;
 }
 
-.expresspay-payment-header {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
+.expresspay-payment .confirm_btn {
+    background-color: #47afdc !important;
+    color: #ffffff !important;
+	border: 0 !important;
+	min-width: 160px;
+    width: initial;
+	font-family: inherit;
+	font-size: 16px;
+	font-weight: 500;
+    font-style: normal !important;
+    margin-right: 30px;
 }
 
+.expresspay-payment .confirm_btn:hover {
+    background-color: #1683b3 !important;
+	border: 0 !important;
+}
+
+.expresspay-payment input[type=checkbox], 
+.expresspay-payment input[type=radio] {
+    border: 2px solid #47AFDC;
+}
+
+.expresspay-payment  input[type=radio]:checked,
+.expresspay-payment  input[type=checkbox]:checked {
+    background-color: #47AFDC;
+}
+
+.expresspay-payment  input[type=radio]:after,
+.expresspay-payment  input[type=checkbox]:after {
+    background: #fff;
+	left: 4px;
+    top: 4px;
+    width: 12px;
+    height: 12px;
+}
+
+.expresspay-payment-header {
+    width: 100%;
+    display: grid;
+    flex-direction: row;
+    grid-template-columns: 220px auto;
+}
+
+
 .expresspay-payment-header .logo {
-    width: 40%;
+    width: 220px;
     margin: 10px;
 }
 
 .expresspay-payment-header .desc {
-    width: 60%;
     text-align: center;
     margin: 10px;
 }
@@ -43,8 +84,9 @@
 }
 
 .expresspay-payment .row .label label {
-    font-size: 20px;
+    font-size: 17px;
     margin: 15px;
+	font-weight: 400;
 }
 
 .expresspay-payment .row .field {
@@ -54,20 +96,25 @@
 
 .expresspay-payment .row .field input {
     width: 100%;
+    border: 1px solid #b8b8b8;
     border-radius: 5px;
 }
 
 .expresspay-payment .row .expresspay_payment_method {
     display: flex;
+    align-items: center;
     flex-direction: row;
     width: 100%;
     padding: 10px;
-    border-radius: 6px;
+    border-radius: 6px;    
 }
-
 
 .expresspay-payment .row .expresspay_payment_method label {
     width: 95%;
+    font-size: 18px;
+    margin-bottom: 0px;
+	font-weight: 400;
+	padding-left: 15px;
 }
 
 #first_step {
@@ -121,4 +168,36 @@
     justify-content: center;
     padding: 0 5px 0 5px;
     width: 50%;
+}
+
+
+@media (max-width: 543px) {
+	.expresspay-payment-header {
+		grid-template-columns: auto;
+	}
+	.expresspay-payment-header .logo {
+		width: auto;
+		text-align: center;
+	}
+	.expresspay-payment .row .label {
+		display: none;
+	}
+	.expresspay-payment .row .field {
+		width: auto;
+	}
+	.expresspay-payment .three_step .table div.row:last-child {
+		flex-direction: row;
+	}
+	.expresspay-payment .secont_step div.row:last-child,
+	.expresspay-payment .three_step div.row:last-child {
+		flex-direction: column;
+	}
+	.expresspay-payment .secont_step div.row:last-child .confirm_btn,
+	.expresspay-payment .three_step div.row:last-child  .confirm_btn {
+		margin-bottom: 20px;
+	}
+	.expresspay-payment .confirm_btn {
+		width: 100%;
+		margin-right: 0px;
+	}
 }
