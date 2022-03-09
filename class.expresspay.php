@@ -2,7 +2,6 @@
 
 class ExpressPay
 {
-
     /**
      * 
      * Получение вью из файла.
@@ -13,7 +12,6 @@ class ExpressPay
      */
     public static function view($name, array $args = array())
     {
-
         foreach ($args as $key => $val) {
             $$key = $val;
         }
@@ -23,7 +21,6 @@ class ExpressPay
         include($file);
     }
 
-
     /**
      * 
      * Подлкючение стилей и скирптов в административной части интеграции
@@ -31,12 +28,15 @@ class ExpressPay
      */
     static function plugin_admin_styles()
     {
-        wp_enqueue_style('pluginAdminCssEp', plugins_url('css/styles.css', __FILE__));
-        wp_enqueue_style('pluginAdminCssBst', plugins_url('css/bootstrap.min.css', __FILE__));
-        wp_enqueue_style('pluginAdminCss', plugins_url('css/admin.css', __FILE__));
+        //CSS
+        wp_enqueue_style('pluginAdminCssEp', plugins_url('css/styles.css', __FILE__), array(), get_plugin_version());
+        wp_enqueue_style('pluginAdminCssBst', plugins_url('css/bootstrap.min.css', __FILE__), array(), get_plugin_version());
+        wp_enqueue_style('pluginAdminCss', plugins_url('css/admin.css', __FILE__), array(), get_plugin_version());
+        
+        //JS
         wp_enqueue_script('pluginAdminJsJsd', plugins_url('js/popper.min.js', __FILE__));
         wp_enqueue_script('pluginAdminJsBst', plugins_url('js/bootstrap.min.js', __FILE__));
-        wp_enqueue_script('pluginAdminJs', plugins_url('js/admin.js', __FILE__));
+        wp_enqueue_script('pluginAdminJs', plugins_url('js/admin.js', __FILE__), array('jquery'), get_plugin_version());
     }
 
     /**
@@ -46,8 +46,11 @@ class ExpressPay
      */
     static function plugin_client_styles()
     {
-        wp_enqueue_style('pluginPaymentCss', plugins_url('css/payment.css', __FILE__));
-        wp_enqueue_script('pluginPaymentJs', plugins_url('js/shortcode.js', __FILE__));
+        //CSS
+        wp_enqueue_style('pluginPaymentCss', plugins_url('css/payment.css', __FILE__), array(), get_plugin_version());
+
+        //JS
+        wp_enqueue_script('pluginPaymentJs', plugins_url('js/shortcode.js', __FILE__), array('jquery'), get_plugin_version());
     }
 
     /**

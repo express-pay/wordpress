@@ -126,8 +126,9 @@
 
     <hr />
 
-    <div class="other_setting" id="erip_setting">
-        <div class="row" id="showQrCodeContainer">
+
+    <div id="erip_setting">
+        <div class="row">
             <div class="col-md-3 col-xs-12">
                 <label for="payment_setting_show_qr_code">
                     <?php esc_html_e('Show QR code', 'wordpress_expresspay') ?>
@@ -193,7 +194,18 @@
         <hr />
     </div>
 
-    <div class="other_setting" id="epos_setting">
+    <div class="row" id="erip_setting_path">
+        <div class="col-md-3 col-xs-12">
+            <label for="payment_setting_erip_path">
+                <?php esc_html_e('Path along the ERIP branch', 'wordpress_expresspay') ?>
+            </label>
+        </div>
+        <div class="col-md-9 col-xs-12">
+            <input type="text" id="payment_setting_erip_path" name="payment_setting_erip_path" placeholder="<?php esc_html_e('Enter Path along the ERIP branch', 'wordpress_expresspay') ?>" value="<?php echo esc_html(isset($param['EripPath']) ? $param['EripPath'] : ''); ?>" />
+        </div>
+    </div>
+
+    <div id="epos_setting">
         <div class="row">
             <div class="col-md-3 col-xs-12">
                 <label for="payment_setting_service_provider_code">
@@ -239,16 +251,6 @@
         </div>
     </div>
 
-    <div class="row" id="successMessageContainer">
-        <div class="col-md-3 col-xs-12">
-            <label for="payment_setting_erip_path">
-                <?php esc_html_e('Path along the ERIP branch', 'wordpress_expresspay') ?>
-            </label>
-        </div>
-        <div class="col-md-9 col-xs-12">
-            <input type="text" id="payment_setting_erip_path" name="payment_setting_erip_path" placeholder="<?php esc_html_e('Enter Path along the ERIP branch', 'wordpress_expresspay') ?>" value="<?php echo esc_html(isset($param['EripPath']) ? $param['EripPath'] : ''); ?>" />
-        </div>
-    </div>
 
     <div class="row">
         <div class="col-md-offset-5 col-md-7">

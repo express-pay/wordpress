@@ -16,31 +16,29 @@ jQuery(document).ready(function () {
     });
 
     jQuery('#btn_step_first').click(function () {
-
         let type = jQuery('#first_step input[name=payment_method]:checked').attr('data-type');
         let sum = jQuery('#expresspay-payment-sum').val();
 
-        if (type == undefined || isNaN(sum) || sum < 0.01) {
-            return;
-        } else if (type == "card") {
-            jQuery('#fio-section').hide();
-            jQuery('#first_step').hide(350);
-            jQuery('#second_step').show(350);
-
-        } else {
-            getPaymentSetting();
-            jQuery('#first_step').hide(350);
-            jQuery('#second_step').show(350);
+        if (type == undefined || isNaN(sum) || sum < 0.01){return;}
+        else if (type == "card") {
+            jQuery('#fio-section').hide(0);
         }
-
-
+        else {
+            jQuery('#fio-section').show(0);
+        }
+        let sendsms = jQuery('#first_step input[name=payment_method]:checked').attr('data-sendsms');
+        let sendemail = jQuery('#first_step input[name=payment_method]:checked').attr('data-sendemail');
+        if(sendsms=='1'){jQuery('#expresspay-payment-phone-container').show(0);}
+        else{jQuery('#expresspay-payment-phone-container').hide(0);}
+        if(sendemail=='1'){jQuery('#expresspay-payment-email-container').show(0);}
+        else{jQuery('#expresspay-payment-email-container').hide(0);}
+        jQuery('#first_step').hide(350);
+        jQuery('#second_step').show(350);
     });
 
     jQuery('#back_second_step').click(function () {
-
         jQuery('#first_step').show(350);
         jQuery('#second_step').hide(350);
-
     });
 
     jQuery('#btn_second_step').click(function () {
@@ -53,7 +51,6 @@ jQuery(document).ready(function () {
     });
 
     jQuery('#back_three_step').click(function () {
-
 
         let type = jQuery('input[name=payment_method]:checked').attr('data-type');
 
@@ -202,46 +199,5 @@ jQuery(document).ready(function () {
 
             });
         });
-    }
-
-    function getPaymentSetting() {
-        let type_id = jQuery('#first_step input[name=payment_method]:checked').val();
-
-        let type = jQuery('#first_step input[name=payment_method]:checked').attr('data-type');
-
-        if (type == 'card')
-            return;
-
-        let url = jQuery('#ajax-url').val();
-
-        jQuery(function ($) {
-            $.ajax({
-                type: "GET",
-                url: url,
-                data: {
-                    action: 'get_payment_setting',
-                    type_id: type_id,
-                },
-                success: function (response) {
-
-                    response = $.parseJSON(response);
-
-                    setSecondStepFields(response);
-
-                }
-            });
-        });
-    }
-
-    function setSecondStepFields(data) {
-
-        if (data.SendEmail == 1) {
-            jQuery('#expresspay-payment-email-container').show(400);
-        } 
-
-        if (data.SendSms == 1) {
-            jQuery('#expresspay-payment-phone-container').show(400);
-        }
-
     }
 });

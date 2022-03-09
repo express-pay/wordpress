@@ -65,9 +65,7 @@
                 </div>
                 <div class="col-md-4">
                     <a class="icon icon_edit" title="<?php esc_html_e('Edit', 'wordpress_expresspay') ?>" href="?page=payment-settings&id=<?php echo esc_html($row->id); ?>"></a>
-                    <?php
-                    if ($row->isactive == 1) :
-                    ?>
+                    <?php if ($row->isactive == 1) :?>
                         <a class="icon icon_stop" onclick="paymentMethodOptions('payment_setting_off', <?php echo esc_html($row->id); ?>)" title="<?php esc_html_e('Disable', 'wordpress_expresspay') ?>"></a>
                     <?php else : ?>
                         <a class="icon icon_on"  onclick="paymentMethodOptions('payment_setting_on', <?php echo esc_html($row->id); ?>)" title="<?php esc_html_e('Enable', 'wordpress_expresspay') ?>"></a>

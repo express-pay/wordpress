@@ -1,67 +1,48 @@
 jQuery(document).ready(function () {
-
     showCurrentSection();
 
-    const checkbox = document.getElementById('payment_setting_test_mode')
+    jQuery("#payment_setting_test_mode").change(function(event) {changeTestMode()});
+    jQuery("#payment_setting_type").change(showCurrentSection);
 
-    checkbox.addEventListener('change', (event) => {
-        if (event.currentTarget.checked) {
-            setTestData();
-        } else {
-            clearTestData();
+    function changeTestMode() {
+        if (jQuery('#payment_setting_test_mode').is(":checked")) {
+            let selected_value = jQuery('#payment_setting_type').val();
+            if(selected_value == 'card'){
+                jQuery('#payment_setting_token').val("a75b74cbcfe446509e8ee874f421bd68");
+                jQuery('#payment_setting_service_id').val("6");
+                jQuery('#payment_setting_secret_word').val("sandbox.expresspay.by");
+            }
+            else{
+                jQuery('#payment_setting_token').val("a75b74cbcfe446509e8ee874f421bd66");
+                jQuery('#payment_setting_service_id').val("4");
+                jQuery('#payment_setting_secret_word').val("sandbox.expresspay.by");
+            }
+        } 
+        else{
+            jQuery('#payment_setting_token').val("");
+            jQuery('#payment_setting_service_id').val("");
+            jQuery('#payment_setting_secret_word').val("");
         }
-    })
-
-    document.getElementById('payment_setting_type')
-        .addEventListener("change", showCurrentSection);
+    }
 
     function showCurrentSection() {
         let selected_value = jQuery('#payment_setting_type').val();
-
-        let current_section = '';
-
-        console.log(selected_value);
-
-        if (selected_value == 'erip')
-        {
+        if (selected_value == 'epos'){
             jQuery('#erip_setting').show(400);
-            jQuery('#successMessageContainer').show(400);
-            current_section = 'erip_setting';
-        } else if (selected_value == 'card')
-        {
-            jQuery('#successMessageContainer').hide(400);
-        } else if (selected_value == 'epos')
-        {
+            jQuery('#erip_setting_path').hide(400);
             jQuery('#epos_setting').show(400);
-            jQuery('#erip_setting').show(400);
-            jQuery('#showQrCodeContainer').hide(400);
-            jQuery('#successMessageContainer').hide(400);
-            current_section = 'epos_setting';
-        } else {
-            jQuery('#successMessageContainer').hide(400);
         }
-
-        jQuery('.other_setting').each(function () {
-
-
-            if (current_section == 'epos_setting' && jQuery(this).attr('id') == 'erip_setting') {
-                return;
-            } else if (jQuery(this).attr('id') == current_section)
-                return;
-            jQuery(this).hide(400);
-        });
-
-
-    }
-
-    function setTestData() {
-        jQuery('#payment_setting_token').val("a75b74cbcfe446509e8ee874f421bd67");
-        jQuery('#payment_setting_service_id').val("5");
-    }
-
-    function clearTestData() {
-        jQuery('#payment_setting_token').val("");
-        jQuery('#payment_setting_service_id').val("");
+        else if (selected_value == 'erip'){
+            jQuery('#erip_setting').show(400);
+            jQuery('#erip_setting_path').show(400);
+            jQuery('#epos_setting').hide(400);
+        }
+        else{
+            jQuery('#erip_setting').hide(400);
+            jQuery('#erip_setting_path').hide(400);
+            jQuery('#epos_setting').hide(400);
+        }
+        changeTestMode();
     }
 });
 
@@ -77,6 +58,9 @@ function paymentMethodOptions(method, id) {
             },
             success: function (response) {
                 location.reload();
+            },
+            error: function (error) {
+                console.error('expresspay_optionEdit error: ', error.responseJSON);
             }
         });
     });

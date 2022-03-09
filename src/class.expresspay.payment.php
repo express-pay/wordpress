@@ -13,16 +13,15 @@ class ExpressPayPayment
 
         $table_name = $wpdb->prefix . "expresspay_options";
 
-        $response = $wpdb->get_results("SELECT id, name, type, isactive FROM $table_name where isactive = 1");
+        $response = $wpdb->get_results("SELECT id, name, type, options, isactive FROM $table_name where isactive = 1");
 
         ob_start();
 
         ExpressPay::plugin_client_styles();
-
         if (count($response) == 0) {
             ExpressPay::view("payment_method_empty", array('response' => $response));
         } else {
-            ExpressPay::view("payment_form", array('response' => $response, 'ajax_url' => admin_url('admin-ajax.php')));
+            ExpressPay::view("payment_form", array('atts' => $atts, 'response' => $response, 'ajax_url' => admin_url('admin-ajax.php')));
         }
 
         return ob_get_clean();
@@ -281,7 +280,6 @@ class ExpressPayPayment
 
             $data = json_decode($data);
 
-
             if (isset($data->CmdType)) {
                 switch ($data->CmdType) {
                     case '1':
@@ -300,22 +298,6 @@ class ExpressPayPayment
                 ExpressPay::updateInvoiceDateOfPayment($data->AccountNo, $data->Created);
             }
         }
-
-        wp_die();
-    }
-
-    /**
-     * Получение настроек интеграции
-     */
-    static function get_payment_setting()
-    {
-        global $wpdb;
-
-        $type_id = sanitize_text_field($_REQUEST['type_id']);
-
-        $payment_options = $wpdb->get_row('SELECT id, name, type, options, isactive FROM ' . EXPRESSPAY_TABLE_PAYMENT_METHOD_NAME . ' WHERE id = ' . $type_id);
-
-        echo $payment_options->options;
 
         wp_die();
     }

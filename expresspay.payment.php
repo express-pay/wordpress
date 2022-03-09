@@ -3,7 +3,7 @@
 Plugin Name: ExpressPay Payment Module
 Plugin URI: https://express-pay.by/cms-extensions/wordpress
 Description: Place the plugin shortcode at any of your pages and start to accept payments in WordPress instantly
-Version: 1.1.4
+Version: 1.1.5
 Author: LLC «TriIncom»
 Author URI: https://express-pay.by
 Text Domain: wordpress_expresspay
@@ -15,6 +15,7 @@ if (!defined('ABSPATH')) exit;
 
 global $wpdb;
 
+define('EXPRESSPAY_SCRIPT_DEBUG', false);
 define('EXPRESSPAY__PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('EXPRESSPAY_TABLE_PAYMENT_METHOD_NAME', $wpdb->prefix . "expresspay_options");
 define('EXPRESSPAY_TABLE_INVOICES_NAME', $wpdb->prefix . "expresspay_invoices");
@@ -25,6 +26,12 @@ require_once(EXPRESSPAY__PLUGIN_DIR . 'class.expresspay.php');
 require_once(EXPRESSPAY__PLUGIN_DIR . 'src/class.payment.settings.list.php');
 require_once(EXPRESSPAY__PLUGIN_DIR . 'src/class.payment.settings.php');
 require_once(EXPRESSPAY__PLUGIN_DIR . 'src/class.invoices.php');
+
+function get_plugin_version() {
+    if (EXPRESSPAY_SCRIPT_DEBUG) { return time(); }
+    $plugin = get_file_data(__FILE__, ['Version' => 'Version'], 'plugin');
+    return $plugin['Version'];
+}
 
 register_activation_hook(__FILE__, array('ExpressPay', 'plugin_activation'));
 register_deactivation_hook(__FILE__, array('ExpressPay', 'plugin_deactivation'));
@@ -53,10 +60,6 @@ add_action('wp_ajax_nopriv_check_invoice', array('ExpressPayPayment', 'check_inv
 //Хук для тестовых настроек
 add_action('wp_ajax_get_test_mode_params', array('ExpressPayPaymentSettings', 'get_test_mode_params')); // For logged in users
 add_action('wp_ajax_nopriv_get_test_mode_params', array('ExpressPayPaymentSettings', 'get_test_mode_params')); // For anonymous users
-
-// Хук получения настроек интеграции
-add_action('wp_ajax_get_payment_setting', array('ExpressPayPayment', 'get_payment_setting')); // For logged in users
-add_action('wp_ajax_nopriv_get_payment_setting', array('ExpressPayPayment', 'get_payment_setting')); // For anonymous users
 
 add_action('wp_ajax_payment_options', array('ExpressPayPaymentSettingsList', 'payment_setting_options')); // For logged in users
 

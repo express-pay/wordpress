@@ -39,8 +39,9 @@ class ExpressPayPaymentSettingsList
 
     static function payment_setting_options()
     {
-        if (isset(($_GET['method']))) {
-            switch (sanitize_text_field($_GET['method'])) {
+        $method = sanitize_text_field($_GET['method']);
+        if (isset($method)) {
+            switch ($method) {
                 case 'payment_setting_on':
                     global $wpdb;
 

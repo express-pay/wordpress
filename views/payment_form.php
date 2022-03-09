@@ -12,29 +12,50 @@
     </div>
     <input type="hidden" id="ajax-url" value="<?php echo esc_html($ajax_url); ?>" />
     <div class="first_step" id="first_step">
+
         <?php foreach ($response as $row) : ?>
+        <?php $options = json_decode($row->options); ?>
             <div class="row">
                 <div class="expresspay_payment_method">
-                    <input type="radio" id="payment_method_<?php echo esc_html($row->id); ?>" data-type="<?php echo esc_html($row->type); ?>" name="payment_method" value="<?php echo esc_html($row->id); ?>" />
+                    <input type="radio" id="payment_method_<?php echo esc_html($row->id); ?>" 
+                    data-type="<?php echo esc_html($row->type); ?>" 
+                    data-sendsms="<?php echo esc_html($options->SendSms); ?>" data-sendemail="<?php echo esc_html($options->SendEmail); ?>"
+                    name="payment_method" value="<?php echo esc_html($row->id); ?>" />
                     <label for="payment_method_<?php echo esc_html($row->id); ?>"><?php echo esc_html($row->name); ?></label>
                 </div>
             </div>
-        <?php
-        endforeach;
-        ?>
+        <?php endforeach;?>
         <div class="row">
             <div class="label">
                 <label for="expresspay-payment-sum"> <?php esc_html_e('Amount', 'wordpress_expresspay') ?></label>
             </div>
+            
             <div class="field">
-                <input type="text" id="expresspay-payment-sum" placeholder="<?php esc_html_e('Enter amount', 'wordpress_expresspay') ?>" />
+                <?php if (isset($atts['amount'])) : ?>
+                    <input type="text" value="<?php echo esc_html($atts['amount']); ?>" disabled id="expresspay-payment-sum" placeholder="<?php esc_html_e('Enter amount', 'wordpress_expresspay') ?>" />
+                <?php else: ?>   
+                    <input type="text" id="expresspay-payment-sum" placeholder="<?php esc_html_e('Enter amount', 'wordpress_expresspay') ?>" />
+                <?php endif ?>            
             </div>
         </div>
         <div class="row">
             <button class="confirm_btn" id="btn_step_first"><?php esc_html_e('Further', 'wordpress_expresspay') ?></button>
         </div>
     </div>
-    <div class="secont_step" id="second_step">      
+    <div class="secont_step" id="second_step">
+        
+        <div class="row">
+            <div class="label">
+                <label for="expresspay-payment-purpose"><?php esc_html_e('Purpose of payment', 'wordpress_expresspay') ?></label>
+            </div>
+            <div class="field">
+                <?php if (isset($atts['info'])) : ?>
+                    <input type="text" value="<?php echo esc_html($atts['info']); ?>" disabled id="expresspay-payment-purpose" placeholder="<?php esc_html_e('Enter purpose of payment', 'wordpress_expresspay') ?>" />
+                <?php else: ?>   
+                    <input type="text" id="expresspay-payment-purpose" placeholder="<?php esc_html_e('Enter purpose of payment', 'wordpress_expresspay') ?>" />
+                <?php endif ?>   
+            </div>
+        </div>    
         <div class="fio-section" id='fio-section'>
             <div class="row">
                 <div class="label">
@@ -59,14 +80,6 @@
                 <div class="field">
                     <input type="text" id="expresspay-payment-secondname" placeholder="<?php esc_html_e('Enter second name', 'wordpress_expresspay') ?>" />
                 </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="label">
-                <label for="expresspay-payment-purpose"><?php esc_html_e('Purpose of payment', 'wordpress_expresspay') ?></label>
-            </div>
-            <div class="field">
-                <input type="text" id="expresspay-payment-purpose" placeholder="<?php esc_html_e('Enter purpose of payment', 'wordpress_expresspay') ?>" />
             </div>
         </div>
         <div class="row" id="expresspay-payment-email-container" style="display:none">
