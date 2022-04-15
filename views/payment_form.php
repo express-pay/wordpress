@@ -32,10 +32,10 @@
             
             <div class="field">
                 <?php if (isset($atts['amount'])) : ?>
-                    <input type="text" value="<?php echo esc_html($atts['amount']); ?>" disabled id="expresspay-payment-sum" placeholder="<?php esc_html_e('Enter amount', 'wordpress_expresspay') ?>" />
-                <?php else: ?>   
+                    <input type="text" value="<?php echo esc_html($atts['amount']); ?>" <?php echo isset($atts['edit_amount']) && $atts['edit_amount']=='true' ?"":"disabled";?> id="expresspay-payment-sum" placeholder="<?php esc_html_e('Enter amount', 'wordpress_expresspay') ?>" />
+                <?php else: ?>
                     <input type="text" id="expresspay-payment-sum" placeholder="<?php esc_html_e('Enter amount', 'wordpress_expresspay') ?>" />
-                <?php endif ?>            
+                <?php endif ?>
             </div>
         </div>
         <div class="row">
