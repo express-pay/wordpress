@@ -38,7 +38,8 @@ class ExpressPayPayment
 
         global $wpdb;
 
-        $response = $wpdb->get_row("SELECT id, name, type, options, isactive FROM " . EXPRESSPAY_TABLE_PAYMENT_METHOD_NAME . " WHERE id = $type_id");
+        $query = $wpdb->prepare("SELECT id, name, type, options, isactive FROM " . EXPRESSPAY_TABLE_PAYMENT_METHOD_NAME . " WHERE id = %d", $type_id);
+        $response = $wpdb->get_row($query);
 
         if ($response->isactive == 1) {
             $max_id = $wpdb->get_row("SELECT max(id) as id FROM " . EXPRESSPAY_TABLE_INVOICES_NAME);
@@ -128,7 +129,8 @@ class ExpressPayPayment
 
         global $wpdb;
 
-        $response = $wpdb->get_row("SELECT options FROM " . EXPRESSPAY_TABLE_PAYMENT_METHOD_NAME . " WHERE id = $type_id");
+        $query = $wpdb->prepare("SELECT options FROM " . EXPRESSPAY_TABLE_PAYMENT_METHOD_NAME . " WHERE id = %d", $type_id);
+        $response = $wpdb->get_row($query);
 
         $options = json_decode($response->options);
         $signatureParams = array(
@@ -241,8 +243,8 @@ class ExpressPayPayment
 				 <br/>4. Make a payment.</td>
 				 <td style="text-align: center;padding: 40px 20px 0 0;vertical-align: middle">
 				 <p>##qr_code##</p><p><b>Scan the QR code to pay</b></p></td></tr></tbody></table>', 'wordpress_expresspay');
-        $epos_code  = $options->ServiceEposCode . "-";
-        $epos_code .= "1-";
+        $epos_code  = $options->ServiceProviderCode . "-";
+        $epos_code .= $options->ServiceEposCode . "-";
         $epos_code .= $account_no;
 
         $message_success_epos = str_replace("##qr_code##", '<img src="data:image/jpeg;base64,' . $qr_code . '"  width="200" height="200"/>', $message_success_epos);
@@ -265,8 +267,9 @@ class ExpressPayPayment
 
             global $wpdb;
 
-            $payment_options = $wpdb->get_row('SELECT id, name, type, options, isactive FROM ' . EXPRESSPAY_TABLE_PAYMENT_METHOD_NAME . ' WHERE id = ' . $type_id);
-
+            $query = $wpdb->prepare("SELECT id, name, type, options, isactive FROM " . EXPRESSPAY_TABLE_PAYMENT_METHOD_NAME . " WHERE id = %d", $type_id);
+            $payment_options = $wpdb->get_row($query);
+            
             $options = json_decode($payment_options->options);
 
             if ($options->UseSignatureForNotification == 1) {

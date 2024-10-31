@@ -26,7 +26,9 @@ class ExpressPayPaymentSettings
             global $wpdb;
 
             $table_name = $wpdb->prefix . "expresspay_options";
-            $response = $wpdb->get_row("SELECT * FROM $table_name WHERE id = $id");
+
+            $query = $wpdb->prepare("SELECT * FROM $table_name WHERE id = %d", $type_id);
+            $response = $wpdb->get_row($query);
 
             $param = json_decode($response->options, true);
         }
