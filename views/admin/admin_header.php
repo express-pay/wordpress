@@ -6,6 +6,6 @@
             </a>
         </div>
         <div class="col-md-8">
-        <h2 class="text-center"><?php esc_html_e('Service «Express Payments»', 'wordpress_expresspay') ?></h2>
+        <h2 class="text-center"><?php esc_html_e('service-express-payments', 'express-pay') ?></h2>
         </div>
     </div>

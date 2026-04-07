@@ -42,19 +42,19 @@ jQuery(document).ready(function () {
             jQuery('#erip_setting_path').hide(400);
             jQuery('#epos_setting').hide(400);
         }
-        changeTestMode();
     }
 });
 
-function paymentMethodOptions(method, id) {
+function paymentMethodOptions(method, id, nonce) {
     jQuery(function ($) {
         $.ajax({
             type: "GET",
             url: ajaxurl,
             data: {
-                action: 'payment_options',
+                action: 'expresspay_payment_options',
                 method: method,
                 id: id,
+                nonce: nonce,
             },
             success: function (response) {
                 location.reload();

@@ -3,11 +3,12 @@
 Plugin Name: ExpressPay Payment Module
 Plugin URI: https://express-pay.by/cms-extensions/wordpress
 Description: Place the plugin shortcode at any of your pages and start to accept payments in WordPress instantly
-Version: 1.2.1
+Version: 1.3.0
 Author: LLC «TriIncom»
 Author URI: https://express-pay.by
-Text Domain: wordpress_expresspay
+Text Domain: express-pay
 Domain Path: /languages
+License: GPL v2 or later
 */
 
 // Exit if accessed directly
@@ -37,7 +38,7 @@ register_activation_hook(__FILE__, array('ExpressPay', 'plugin_activation'));
 register_deactivation_hook(__FILE__, array('ExpressPay', 'plugin_deactivation'));
 register_uninstall_hook(__FILE__, array('ExpressPay', 'plugin_uninstall'));
 
-load_plugin_textdomain("wordpress_expresspay", false, dirname(plugin_basename(__FILE__)) . '/languages');
+load_plugin_textdomain("express-pay", false, dirname(plugin_basename(__FILE__)) . '/languages');
 
 // Хук добавления меню в администртивной части Wordpress
 add_action('admin_menu', 'add_expresspay_plugin_menu');
@@ -46,22 +47,22 @@ add_action('admin_menu', 'add_expresspay_plugin_menu');
 add_shortcode('expresspay_payment', array('ExpressPayPayment', 'payment_callback'));
 
 // Хук получения уведомления о платеже
-add_action('wp_ajax_receive_notification', array('ExpressPayPayment', 'receive_notification')); // For logged in users
-add_action('wp_ajax_nopriv_receive_notification', array('ExpressPayPayment', 'receive_notification')); // For anonymous users
+add_action('wp_ajax_expresspay_receive_notification', array('ExpressPayPayment', 'receive_notification')); // For logged in users
+add_action('wp_ajax_nopriv_expresspay_receive_notification', array('ExpressPayPayment', 'receive_notification')); // For anonymous users
 
 // Хук получения данных для формы
-add_action('wp_ajax_get_form_gata', array('ExpressPayPayment', 'get_form_gata')); // For logged in users
-add_action('wp_ajax_nopriv_get_form_gata', array('ExpressPayPayment', 'get_form_gata')); // For anonymous users
+add_action('wp_ajax_expresspay_get_form_data', array('ExpressPayPayment', 'get_form_data')); // For logged in users
+add_action('wp_ajax_nopriv_expresspay_get_form_data', array('ExpressPayPayment', 'get_form_data')); // For anonymous users
 
 // Хук ответа при выставлении счета
-add_action('wp_ajax_check_invoice', array('ExpressPayPayment', 'check_invoice')); // For logged in users
-add_action('wp_ajax_nopriv_check_invoice', array('ExpressPayPayment', 'check_invoice')); // For anonymous users
+add_action('wp_ajax_expresspay_check_invoice', array('ExpressPayPayment', 'check_invoice')); // For logged in users
+add_action('wp_ajax_nopriv_expresspay_check_invoice', array('ExpressPayPayment', 'check_invoice')); // For anonymous users
 
-//Хук для тестовых настроек
-add_action('wp_ajax_get_test_mode_params', array('ExpressPayPaymentSettings', 'get_test_mode_params')); // For logged in users
-add_action('wp_ajax_nopriv_get_test_mode_params', array('ExpressPayPaymentSettings', 'get_test_mode_params')); // For anonymous users
+//Хок для тестовых настроек
+add_action('wp_ajax_expresspay_get_test_mode_params', array('ExpressPayPaymentSettings', 'get_test_mode_params')); // For logged in users
+add_action('wp_ajax_nopriv_expresspay_get_test_mode_params', array('ExpressPayPaymentSettings', 'get_test_mode_params')); // For anonymous users
 
-add_action('wp_ajax_payment_options', array('ExpressPayPaymentSettingsList', 'payment_setting_options')); // For logged in users
+add_action('wp_ajax_expresspay_payment_options', array('ExpressPayPaymentSettingsList', 'payment_setting_options')); // For logged in users
 
 /**
  * Создание меню в администртивной части Wordpress
@@ -69,8 +70,8 @@ add_action('wp_ajax_payment_options', array('ExpressPayPaymentSettingsList', 'pa
 function add_expresspay_plugin_menu()
 {
     add_menu_page(
-        __('Express Payments', 'wordpress_expresspay'),
-        __('Express Payments', 'wordpress_expresspay'),
+        __('express-payments', 'express-pay'),
+        __('express-payments', 'express-pay'),
         'administrator',
         'expresspay-payment',
         NULL,
@@ -79,8 +80,8 @@ function add_expresspay_plugin_menu()
 
     $home_page = add_submenu_page(
         'expresspay-payment',
-        __('Home', 'wordpress_expresspay'),
-        __('Home', 'wordpress_expresspay'),
+        __('home', 'express-pay'),
+        __('home', 'express-pay'),
         'administrator',
         'expresspay-payment',
         array('ExpressPayHome', 'get_default_option_page')
@@ -88,8 +89,8 @@ function add_expresspay_plugin_menu()
 
     $invoice_page = add_submenu_page(
         'expresspay-payment',
-        __('Invoices and payemnts', 'wordpress_expresspay'),
-        __('Invoices and payemnts', 'wordpress_expresspay'),
+        __('invoices-and-payments', 'express-pay'),
+        __('invoices-and-payments', 'express-pay'),
         'administrator',
         'invoices-and-payments',
         array('ExpressPayInvoicesAndPayemnts', 'get_invoices_page')
@@ -97,8 +98,8 @@ function add_expresspay_plugin_menu()
 
     $pay_settings_list_page = add_submenu_page(
         'expresspay-payment',
-        __('Settings', 'wordpress_expresspay'),
-        __('Settings', 'wordpress_expresspay'),
+        __('settings', 'express-pay'),
+        __('settings', 'express-pay'),
         'administrator',
         'payment-settings-list',
         array('ExpressPayPaymentSettingsList', 'get_payment_setting_list_page')
@@ -106,8 +107,8 @@ function add_expresspay_plugin_menu()
 
     $payment_settings_page = add_submenu_page(
         NULL,
-        __('Settings', 'wordpress_expresspay'),
-        __('Settings', 'wordpress_expresspay'),
+        __('settings', 'express-pay'),
+        __('settings', 'express-pay'),
         'administrator',
         'payment-settings',
         array('ExpressPayPaymentSettings', 'get_payment_setting_page')

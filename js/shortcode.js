@@ -107,7 +107,7 @@ jQuery(document).ready(function () {
                 type: "GET",
                 url: url,
                 data: {
-                    action: 'get_form_gata',
+                    action: 'expresspay_get_form_data',
                     type_id: type_id,
                     amount: amount,
                     last_name: last_name,
@@ -173,7 +173,7 @@ jQuery(document).ready(function () {
                 type: "GET",
                 url: url,
                 data: {
-                    action: 'check_invoice',
+                    action: 'expresspay_check_invoice',
                     type_id: type_id,
                     signature: signature,
                     account_no: account_no,

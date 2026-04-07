@@ -12,9 +12,7 @@ class ExpressPayInvoicesAndPayemnts
 
         global $wpdb;
 
-        $table_name = EXPRESSPAY_TABLE_INVOICES_NAME;
-
-        $response = $wpdb->get_results("SELECT id, amount, datecreated, status, options, options_id, dateofpayment FROM $table_name");
+        $response = $wpdb->get_results("SELECT id, amount, datecreated, status, options, options_id, dateofpayment FROM " . $wpdb->prefix . "expresspay_invoices");
 
         if (count($response) == 0) {
             ExpressPay::view(

@@ -220,13 +220,23 @@ class ExpressPay
     {
         global $wpdb;
 
+        // Validate and cast inputs
+        $account_no = intval($account_no);
+        $status = intval($status);
+
+        if ($account_no <= 0 || $status < 0) {
+            return false;
+        }
+
         $wpdb->update(
             EXPRESSPAY_TABLE_INVOICES_NAME,
             array('status' => $status),
             array('id' => $account_no),
             array('%d'),
-            array('%s')
+            array('%d')
         );
+        
+        return true;
     }
 
     /**
@@ -241,13 +251,23 @@ class ExpressPay
     {
         global $wpdb;
 
+        // Validate and cast inputs
+        $account_no = intval($account_no);
+        $dateofpayment = sanitize_text_field($dateofpayment);
+
+        if ($account_no <= 0 || empty($dateofpayment)) {
+            return false;
+        }
+
         $wpdb->update(
             EXPRESSPAY_TABLE_INVOICES_NAME,
             array('dateofpayment' => $dateofpayment),
             array('id' => $account_no),
             array('%s'),
-            array('%s')
+            array('%d')
         );
+        
+        return true;
     }
 
     /**

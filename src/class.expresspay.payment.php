@@ -11,9 +11,7 @@ class ExpressPayPayment
     {
         global $wpdb;
 
-        $table_name = $wpdb->prefix . "expresspay_options";
-
-        $response = $wpdb->get_results("SELECT id, name, type, options, isactive FROM $table_name where isactive = 1");
+        $response = $wpdb->get_results("SELECT id, name, type, options, isactive FROM " . $wpdb->prefix . "expresspay_options WHERE isactive = 1");
 
         ob_start();
 
@@ -32,8 +30,17 @@ class ExpressPayPayment
      * 
      * @return json Ответ на клиента
      */
-    static function get_form_gata()
+    static function get_form_data()
     {
+        // Verify all required parameters exist
+        if (!isset($_REQUEST['type_id']) || !isset($_REQUEST['amount']) || 
+            !isset($_REQUEST['last_name']) || !isset($_REQUEST['first_name']) ||
+            !isset($_REQUEST['patronymic']) || !isset($_REQUEST['email']) ||
+            !isset($_REQUEST['phone']) || !isset($_REQUEST['url']) || 
+            !isset($_REQUEST['info'])) {
+            wp_die(__('Missing required parameters.', 'express-pay'));
+        }
+
         $type_id = sanitize_text_field($_REQUEST['type_id']);
 
         global $wpdb;
@@ -41,8 +48,12 @@ class ExpressPayPayment
         $query = $wpdb->prepare("SELECT id, name, type, options, isactive FROM " . EXPRESSPAY_TABLE_PAYMENT_METHOD_NAME . " WHERE id = %d", $type_id);
         $response = $wpdb->get_row($query);
 
+        if (empty($response)) {
+            wp_die(__('Payment method not found.', 'express-pay'));
+        }
+
         if ($response->isactive == 1) {
-            $max_id = $wpdb->get_row("SELECT max(id) as id FROM " . EXPRESSPAY_TABLE_INVOICES_NAME);
+            $max_id = $wpdb->get_row("SELECT max(id) as id FROM " . $wpdb->prefix . "expresspay_invoices");
 
             $account_no = $max_id->id == null ? 1 : $max_id->id + 1;
 
@@ -54,7 +65,7 @@ class ExpressPayPayment
             $patronymic = sanitize_text_field($_REQUEST['patronymic']);
             $email = sanitize_email($_REQUEST['email']);
             $phone = sanitize_text_field($_REQUEST['phone']);
-            $url = sanitize_text_field($_REQUEST['url']);
+            $url = esc_url_raw($_REQUEST['url']);
             $info = sanitize_text_field($_REQUEST['info']);
 
             if ($options->SendSms)
@@ -101,7 +112,7 @@ class ExpressPayPayment
                     'id' => $account_no, 'amount' => $amount,
                     'datecreated' => current_time('mysql', 1),
                     'status' => 0,
-                    'options' => json_encode($signatureParams),
+                    'options' => wp_json_encode($signatureParams),
                     'options_id' => $type_id
                 ),
                 array('%s', '%d', '%s', '%d', '%s', '%d')
@@ -109,7 +120,7 @@ class ExpressPayPayment
 
             unset($signatureParams['Token']);
 
-            echo json_encode($signatureParams);
+            echo wp_json_encode($signatureParams);
         } else {
         }
         wp_die();
@@ -122,6 +133,12 @@ class ExpressPayPayment
      */
     static function check_invoice()
     {
+        // Verify all required parameters exist
+        if (!isset($_REQUEST['type_id']) || !isset($_REQUEST['signature']) || 
+            !isset($_REQUEST['account_no']) || !isset($_REQUEST['invoice_no'])) {
+            wp_die(__('Missing required parameters.', 'express-pay'));
+        }
+
         $type_id = sanitize_text_field($_REQUEST['type_id']);
         $signature = sanitize_text_field($_REQUEST['signature']);
         $account_no = sanitize_text_field($_REQUEST['account_no']);
@@ -131,6 +148,10 @@ class ExpressPayPayment
 
         $query = $wpdb->prepare("SELECT options FROM " . EXPRESSPAY_TABLE_PAYMENT_METHOD_NAME . " WHERE id = %d", $type_id);
         $response = $wpdb->get_row($query);
+
+        if (empty($response)) {
+            wp_die(__('Payment method not found.', 'express-pay'));
+        }
 
         $options = json_decode($response->options);
         $signatureParams = array(
@@ -162,7 +183,7 @@ class ExpressPayPayment
                     $message_success = self::getEposMessage($options, $invoice_no, $account_no);
                     break;
                 case 'card':
-                    $message_success = __('The invoice has been successfully paid!', 'wordpress_expresspay');
+                    $message_success = __('invoice-successfully-paid', 'express-pay');
                     break;
             }
 
@@ -171,10 +192,10 @@ class ExpressPayPayment
             $callback["message"] = $message_success;
         } else {
             $callback["status"] = "fail";
-            $callback["message"] = __('An error occurred during the billing process', 'wordpress_expresspay');
+            $callback["message"] = __('billing-error-message', 'express-pay');
         }
 
-        echo json_encode($callback);
+        echo wp_json_encode($callback);
 
         wp_die();
     }
@@ -191,15 +212,7 @@ class ExpressPayPayment
     static function getEripMessage($options, $invoice_no, $account_no)
     {
 
-        $message_success_erip = __('<h3>Account added to the ERIP system for payment</h3>
-        <h4>Your order number: ##order_id##</h4>
-        <table style="width: 100%;text-align: left;"><tbody><tr><td valign="top" style="text-align:left;">
-        You need to make a payment in any system that allows you to pay through ERIP (items banking services, ATMs,
-        payment terminals, Internet banking systems, client banking, etc.).
-        <br/> 1. To do this, in the list of ERIP services go to the section:<br/><b>##erip_path##</b>
-        <br/> 2. Next, enter the order number <b>##order_id##</b> and click "Continue"
-        <br/> 3. Check if the information is correct. 
-        <br/> 4. Make a payment.</td> ', 'wordpress_expresspay');
+        $message_success_erip = __('erip-payment-success-message', 'express-pay');
 
         $message_success_erip = str_replace("##order_id##", $account_no, $message_success_erip);
         $message_success_erip = str_replace("##erip_path##", $options->EripPath, $message_success_erip);
@@ -209,7 +222,7 @@ class ExpressPayPayment
             <br/>##OR_CODE##<br/><p><b>##OR_CODE_DESCRIPTION##</b></p></td></tr></tbody></table>";
             $qr_code = ExpressPay::getQrCode($options->Token, $invoice_no, $options->SecretWord);
             $message_success_erip = str_replace('##OR_CODE##', '<img src="data:image/jpeg;base64,' . $qr_code . '"  width="200" height="200"/>',  $message_success_erip);
-            $message_success_erip = str_replace('##OR_CODE_DESCRIPTION##', __('Scan the QR code to pay', 'wordpress_expresspay'),  $message_success_erip);
+            $message_success_erip = str_replace('##OR_CODE_DESCRIPTION##', __('scan-the-qr-code-to-pay', 'express-pay'),  $message_success_erip);
         } else {
             $message_success_erip = str_replace('##OR_CODE##', '',  $message_success_erip);
             $message_success_erip = str_replace('##OR_CODE_DESCRIPTION##', '',  $message_success_erip);
@@ -231,18 +244,7 @@ class ExpressPayPayment
     {
         $qr_code = ExpressPay::getQrCode($options->Token, $invoice_no, $options->SecretWord);
 
-        $message_success_epos = __('<h3>Account added to the E-POS system for payment</h3>
-				<h4>Your order number: ##epos_code##</h4>
-				<table style="width: 100%;text-align: left;"><tbody><tr><td valign="top" style="text-align:left;">
-				You need to make a payment in any system that allows you to pay through ERIP (banking service points, 
-				ATMs, payment terminals, Internet banking systems, client banking, etc.).
-				<br/> 1. To do this, in the list of ERIP services, go to the section: <b> Settlement System (ERIP)
-				 -&gt; E-POS Service-&gt; E-POS - payment for goods and services</b>
-				 <br/>2. In the Code field, enter <b>##epos_code##</b> and click "Continue"
-				 <br/>3. Check the correctness of the information
-				 <br/>4. Make a payment.</td>
-				 <td style="text-align: center;padding: 40px 20px 0 0;vertical-align: middle">
-				 <p>##qr_code##</p><p><b>Scan the QR code to pay</b></p></td></tr></tbody></table>', 'wordpress_expresspay');
+        $message_success_epos = __('epos-payment-success-message', 'express-pay');
         $epos_code  = $options->ServiceProviderCode . "-";
         $epos_code .= $options->ServiceEposCode . "-";
         $epos_code .= $account_no;
@@ -259,6 +261,11 @@ class ExpressPayPayment
     static function receive_notification()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Verify required parameters exist
+            if (!isset($_REQUEST['type_id'])) {
+                wp_die(__('Missing type_id parameter.', 'express-pay'));
+            }
+
             $data = (isset($_REQUEST['Data'])) ? sanitize_text_field($_REQUEST['Data']) : '';
             $data = stripcslashes($data);
             $signature = (isset($_REQUEST['Signature'])) ? sanitize_text_field($_REQUEST['Signature']) : '';
@@ -270,6 +277,10 @@ class ExpressPayPayment
             $query = $wpdb->prepare("SELECT id, name, type, options, isactive FROM " . EXPRESSPAY_TABLE_PAYMENT_METHOD_NAME . " WHERE id = %d", $type_id);
             $payment_options = $wpdb->get_row($query);
             
+            if (empty($payment_options)) {
+                wp_die(__('Payment method not found.', 'express-pay'));
+            }
+
             $options = json_decode($payment_options->options);
 
             if ($options->UseSignatureForNotification == 1) {
@@ -284,21 +295,34 @@ class ExpressPayPayment
             $data = json_decode($data);
 
             if (isset($data->CmdType)) {
-                switch ($data->CmdType) {
-                    case '1':
-                        ExpressPay::updateInvoiceStatus($data->AccountNo, 3);
-                        break;
-                    case '2':
-                        ExpressPay::updateInvoiceStatus($data->AccountNo, 5);
-                        break;
-                    case '3':
-                        ExpressPay::updateInvoiceStatus($data->AccountNo, $data->Status);
-                        break;
+                // Validate AccountNo as integer
+                $account_no = isset($data->AccountNo) ? intval($data->AccountNo) : 0;
+                
+                if ($account_no > 0) {
+                    switch ($data->CmdType) {
+                        case '1':
+                            ExpressPay::updateInvoiceStatus($account_no, 3);
+                            break;
+                        case '2':
+                            ExpressPay::updateInvoiceStatus($account_no, 5);
+                            break;
+                        case '3':
+                            $status = isset($data->Status) ? intval($data->Status) : 0;
+                            if ($status >= 0) {
+                                ExpressPay::updateInvoiceStatus($account_no, $status);
+                            }
+                            break;
+                    }
                 }
             }
 
             if (isset($data->Created)) {
-                ExpressPay::updateInvoiceDateOfPayment($data->AccountNo, $data->Created);
+                $account_no = isset($data->AccountNo) ? intval($data->AccountNo) : 0;
+                $date_of_payment = isset($data->Created) ? sanitize_text_field($data->Created) : '';
+                
+                if ($account_no > 0 && !empty($date_of_payment)) {
+                    ExpressPay::updateInvoiceDateOfPayment($account_no, $date_of_payment);
+                }
             }
         }
 

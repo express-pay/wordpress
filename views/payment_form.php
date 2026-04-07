@@ -4,7 +4,7 @@
             <img src="<?php echo esc_html(plugins_url('admin/img/logo.png', __FILE__)); ?>" alt="exspress-pay.by" title="express-pay.by">
         </div>
         <div class="desc">
-            <p><?php esc_html_e('Payment using the «Express payments service»', 'wordpress_expresspay') ?></p>
+            <p><?php esc_html_e('payment-using-the-express-payments-service-with-quotes', 'express-pay') ?></p>
         </div>
     </div>
     <div class="row error_panel">
@@ -27,93 +27,93 @@
         <?php endforeach;?>
         <div class="row">
             <div class="label">
-                <label for="expresspay-payment-sum"> <?php esc_html_e('Amount', 'wordpress_expresspay') ?></label>
+                <label for="expresspay-payment-sum"> <?php esc_html_e('amount', 'express-pay') ?></label>
             </div>
             
             <div class="field">
                 <?php if (isset($atts['amount'])) : ?>
-                    <input type="text" value="<?php echo esc_html($atts['amount']); ?>" <?php echo isset($atts['edit_amount']) && $atts['edit_amount']=='true' ?"":"disabled";?> id="expresspay-payment-sum" placeholder="<?php esc_html_e('Enter amount', 'wordpress_expresspay') ?>" />
+                    <input type="text" value="<?php echo esc_html($atts['amount']); ?>" <?php echo isset($atts['edit_amount']) && $atts['edit_amount']=='true' ?"":"disabled";?> id="expresspay-payment-sum" placeholder="<?php esc_html_e('enter-amount', 'express-pay') ?>" />
                 <?php else: ?>
-                    <input type="text" id="expresspay-payment-sum" placeholder="<?php esc_html_e('Enter amount', 'wordpress_expresspay') ?>" />
+                    <input type="text" id="expresspay-payment-sum" placeholder="<?php esc_html_e('enter-amount', 'express-pay') ?>" />
                 <?php endif ?>
             </div>
         </div>
         <div class="row">
-            <button class="confirm_btn" id="btn_step_first"><?php esc_html_e('Further', 'wordpress_expresspay') ?></button>
+            <button class="confirm_btn" id="btn_step_first"><?php esc_html_e('further', 'express-pay') ?></button>
         </div>
     </div>
     <div class="secont_step" id="second_step">
         
         <div class="row">
             <div class="label">
-                <label for="expresspay-payment-purpose"><?php esc_html_e('Purpose of payment', 'wordpress_expresspay') ?></label>
+                <label for="expresspay-payment-purpose"><?php esc_html_e('purpose-of-payment', 'express-pay') ?></label>
             </div>
             <div class="field">
                 <?php if (isset($atts['info'])) : ?>
-                    <input type="text" value="<?php echo esc_html($atts['info']); ?>" disabled id="expresspay-payment-purpose" placeholder="<?php esc_html_e('Enter purpose of payment', 'wordpress_expresspay') ?>" />
+                    <input type="text" value="<?php echo esc_html($atts['info']); ?>" disabled id="expresspay-payment-purpose" placeholder="<?php esc_html_e('enter-purpose-of-payment', 'express-pay') ?>" />
                 <?php else: ?>   
-                    <input type="text" id="expresspay-payment-purpose" placeholder="<?php esc_html_e('Enter purpose of payment', 'wordpress_expresspay') ?>" />
+                    <input type="text" id="expresspay-payment-purpose" placeholder="<?php esc_html_e('enter-purpose-of-payment', 'express-pay') ?>" />
                 <?php endif ?>   
             </div>
         </div>    
         <div class="fio-section" id='fio-section'>
             <div class="row">
                 <div class="label">
-                    <label for="expresspay-payment-last-name"><?php esc_html_e('Surname', 'wordpress_expresspay') ?></label>
+                    <label for="expresspay-payment-last-name"><?php esc_html_e('surname', 'express-pay') ?></label>
                 </div>
                 <div class="field">
-                    <input type="text" id="expresspay-payment-last-name" placeholder="<?php esc_html_e('Enter surname', 'wordpress_expresspay') ?>" />
+                    <input type="text" id="expresspay-payment-last-name" placeholder="<?php esc_html_e('enter-surname', 'express-pay') ?>" />
                 </div>
             </div>
             <div class="row">
                 <div class="label">
-                    <label for="expresspay-payment-name"><?php esc_html_e('Name', 'wordpress_expresspay') ?></label>
+                    <label for="expresspay-payment-name"><?php esc_html_e('name', 'express-pay') ?></label>
                 </div>
                 <div class="field">
-                    <input type="text" id="expresspay-payment-name" placeholder="<?php esc_html_e('Enter name', 'wordpress_expresspay') ?>" />
+                    <input type="text" id="expresspay-payment-name" placeholder="<?php esc_html_e('enter-name', 'express-pay') ?>" />
                 </div>
             </div>
             <div class="row">
                 <div class="label">
-                    <label for="expresspay-payment-secondname"><?php esc_html_e('Second name', 'wordpress_expresspay') ?></label>
+                    <label for="expresspay-payment-secondname"><?php esc_html_e('second-name', 'express-pay') ?></label>
                 </div>
                 <div class="field">
-                    <input type="text" id="expresspay-payment-secondname" placeholder="<?php esc_html_e('Enter second name', 'wordpress_expresspay') ?>" />
+                    <input type="text" id="expresspay-payment-secondname" placeholder="<?php esc_html_e('enter-second-name', 'express-pay') ?>" />
                 </div>
             </div>
         </div>
         <div class="row" id="expresspay-payment-email-container" style="display:none">
             <div class="label">
-                <label for="expresspay-payment-email"><?php esc_html_e('E-mail', 'wordpress_expresspay') ?></label>
+                <label for="expresspay-payment-email"><?php esc_html_e('e-mail', 'express-pay') ?></label>
             </div>
             <div class="field">
-                <input type="text" id="expresspay-payment-email" placeholder="<?php esc_html_e('Enter e-mail', 'wordpress_expresspay') ?>" />
+                <input type="text" id="expresspay-payment-email" placeholder="<?php esc_html_e('enter-e-mail', 'express-pay') ?>" />
             </div>
         </div>
         <div class="row" id="expresspay-payment-phone-container" style="display:none">
             <div class="label">
-                <label for="expresspay-payment-phone"><?php esc_html_e('Mobile number', 'wordpress_expresspay') ?></label>
+                <label for="expresspay-payment-phone"><?php esc_html_e('mobile-number', 'express-pay') ?></label>
             </div>
             <div class="field">
-                <input type="text" id="expresspay-payment-phone" placeholder="<?php esc_html_e('Enter mobile number', 'wordpress_expresspay') ?>" />
+                <input type="text" id="expresspay-payment-phone" placeholder="<?php esc_html_e('enter-mobile-number', 'express-pay') ?>" />
             </div>
         </div>
         <div class="row">
-            <button class="confirm_btn" id="back_second_step"><?php esc_html_e('Back', 'wordpress_expresspay') ?></button>
-            <button class="confirm_btn" id="btn_second_step"><?php esc_html_e('Checkout', 'wordpress_expresspay') ?></button>
+            <button class="confirm_btn" id="back_second_step"><?php esc_html_e('back', 'express-pay') ?></button>
+            <button class="confirm_btn" id="btn_second_step"><?php esc_html_e('checkout', 'express-pay') ?></button>
         </div>
     </div>
     <div class="three_step" id="three_step">      
         <div class="table">
             <div class="row type">
                 <div class="desc">
-                    <p><?php esc_html_e('Payment method', 'wordpress_expresspay') ?></p>
+                    <p><?php esc_html_e('payment-method', 'express-pay') ?></p>
                 </div>
                 <div class="val"></div>
             </div>
             <div class="row amount">
                 <div class="desc">
-                    <p><?php esc_html_e('Amount', 'wordpress_expresspay') ?></p>
+                    <p><?php esc_html_e('amount', 'express-pay') ?></p>
                 </div>
                 <div class="val"></div>
             </div>
@@ -138,22 +138,22 @@
             <input type="hidden" name="Signature" id="expresspay-payment-signature" value="" />
 
             <div class="row">
-                <p id="service_message"><?php esc_html_e('Whait second...', 'wordpress_expresspay') ?></p>
+                <p id="service_message"><?php esc_html_e('wait-second', 'express-pay') ?></p>
             </div>
 
             <div class="row">	
-				<button class="confirm_btn back_link" id="back_three_step"><?php esc_html_e('Back', 'wordpress_expresspay') ?></button>	
-                <input class="confirm_btn" style="visibility:hidden" type="submit" id="expresspay-payment-submit-btn" value="<?php esc_html_e('Pay', 'wordpress_expresspay') ?>" />
+			<button class="confirm_btn back_link" id="back_three_step"><?php esc_html_e('back', 'express-pay') ?></button>    
+                <input class="confirm_btn" style="visibility:hidden" type="submit" id="expresspay-payment-submit-btn" value="<?php esc_html_e('pay', 'express-pay') ?>" />
             </div>
         </form>
     </div>
     <div class="response_step" id="response_step">
         <div class="row">
-            <p id="service_response_message"><?php esc_html_e('Whait second...', 'wordpress_expresspay') ?></p>
+            <p id="service_response_message"><?php esc_html_e('wait-second', 'express-pay') ?></p>
             <p id="response_message"></p>
         </div>
         <div class="row">
-            <button class="btn confirm_btn" id="replay_btn"><?php esc_html_e('Repeat', 'wordpress_expresspay') ?></button>
+            <button class="btn confirm_btn" id="replay_btn"><?php esc_html_e('repeat', 'express-pay') ?></button>
         </div>
     </div>
 </div>
