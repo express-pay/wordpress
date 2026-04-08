@@ -12,7 +12,18 @@ class ExpressPayPaymentSettingsList
 
         global $wpdb;
 
-        $response = $wpdb->get_results("SELECT id, name, type, isactive FROM " . $wpdb->prefix . "expresspay_options");
+        $cache_key = 'expresspay_payment_settings_list';
+        $response = wp_cache_get($cache_key);
+        
+        if (false === $response) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom table access via $wpdb is required.
+            $response = $wpdb->get_results(
+                "SELECT id, name, type, isactive FROM " . $wpdb->prefix . "expresspay_options"
+            );
+            if (!empty($response)) {
+                wp_cache_set($cache_key, $response, '', 3600);
+            }
+        }
 
         if (count($response) == 0) {
             ExpressPay::view(
@@ -39,12 +50,12 @@ class ExpressPayPaymentSettingsList
     {
         // Check if user is administrator
         if (!current_user_can('manage_options')) {
-            wp_die(__('Unauthorized access.', 'express-pay'));
+            wp_die(esc_html__('Unauthorized access.', 'express-pay'));
         }
 
         // Check nonce for CSRF protection
-        if (!isset($_GET['nonce']) || !wp_verify_nonce($_GET['nonce'], 'express_pay_settings_list')) {
-            wp_die(__('Security check failed.', 'express-pay'));
+        if (!isset($_GET['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['nonce'])), 'express_pay_settings_list')) {
+            wp_die(esc_html__('Security check failed.', 'express-pay'));
         }
 
         // Verify method parameter exists
@@ -52,7 +63,7 @@ class ExpressPayPaymentSettingsList
             return;
         }
 
-        $method = sanitize_text_field($_GET['method']);
+        $method = sanitize_text_field(wp_unslash($_GET['method']));
         
         switch ($method) {
             case 'payment_setting_on':
@@ -65,6 +76,7 @@ class ExpressPayPaymentSettingsList
                 $table_name = $wpdb->prefix . "expresspay_options";
                 $id = intval($_GET['id']);
 
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom table write via $wpdb is required.
                 $wpdb->update(
                     $table_name,
                     array('isactive' => 1),
@@ -72,6 +84,8 @@ class ExpressPayPaymentSettingsList
                     array('%d'),
                     array('%d')
                 );
+                wp_cache_delete('expresspay_active_options');
+                wp_cache_delete('expresspay_payment_settings_list');
                 break;
 
             case 'payment_setting_off':
@@ -84,6 +98,7 @@ class ExpressPayPaymentSettingsList
                 $table_name = $wpdb->prefix . "expresspay_options";
                 $id = intval($_GET['id']);
 
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom table write via $wpdb is required.
                 $wpdb->update(
                     $table_name,
                     array('isactive' => 0),
@@ -91,6 +106,8 @@ class ExpressPayPaymentSettingsList
                     array('%d'),
                     array('%d')
                 );
+                wp_cache_delete('expresspay_active_options');
+                wp_cache_delete('expresspay_payment_settings_list');
                 break;
 
             case 'payment_setting_delete':
@@ -103,13 +120,16 @@ class ExpressPayPaymentSettingsList
                 $table_name = $wpdb->prefix . "expresspay_options";
                 $id = intval($_GET['id']);
 
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom table write via $wpdb is required.
                 $wpdb->delete($table_name, array('id' => $id), array('%d'));
+                wp_cache_delete('expresspay_active_options');
+                wp_cache_delete('expresspay_payment_settings_list');
                 break;
 
             default:
                 // Validate REQUEST_URI before storing
                 if (isset($_SERVER['REQUEST_URI'])) {
-                    $request_uri = esc_url_raw($_SERVER['REQUEST_URI']);
+                    $request_uri = esc_url_raw(wp_unslash($_SERVER['REQUEST_URI']));
                     update_option('expresspay_plugin_ult', $request_uri);
                 }
                 break;

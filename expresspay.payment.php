@@ -3,7 +3,7 @@
 Plugin Name: ExpressPay Payment Module
 Plugin URI: https://express-pay.by/cms-extensions/wordpress
 Description: Place the plugin shortcode at any of your pages and start to accept payments in WordPress instantly
-Version: 1.3.0
+Version: 1.4.0
 Author: LLC «TriIncom»
 Author URI: https://express-pay.by
 Text Domain: express-pay
@@ -28,7 +28,7 @@ require_once(EXPRESSPAY__PLUGIN_DIR . 'src/class.payment.settings.list.php');
 require_once(EXPRESSPAY__PLUGIN_DIR . 'src/class.payment.settings.php');
 require_once(EXPRESSPAY__PLUGIN_DIR . 'src/class.invoices.php');
 
-function get_plugin_version() {
+function expresspay_get_plugin_version() {
     if (EXPRESSPAY_SCRIPT_DEBUG) { return time(); }
     $plugin = get_file_data(__FILE__, ['Version' => 'Version'], 'plugin');
     return $plugin['Version'];
@@ -41,7 +41,7 @@ register_uninstall_hook(__FILE__, array('ExpressPay', 'plugin_uninstall'));
 load_plugin_textdomain("express-pay", false, dirname(plugin_basename(__FILE__)) . '/languages');
 
 // Хук добавления меню в администртивной части Wordpress
-add_action('admin_menu', 'add_expresspay_plugin_menu');
+add_action('admin_menu', 'expresspay_add_plugin_menu');
 
 // Добавление шорткода
 add_shortcode('expresspay_payment', array('ExpressPayPayment', 'payment_callback'));
@@ -67,7 +67,7 @@ add_action('wp_ajax_expresspay_payment_options', array('ExpressPayPaymentSetting
 /**
  * Создание меню в администртивной части Wordpress
 */
-function add_expresspay_plugin_menu()
+function expresspay_add_plugin_menu()
 {
     add_menu_page(
         __('express-payments', 'express-pay'),

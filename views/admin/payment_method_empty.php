@@ -1,3 +1,8 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+?>
 <div class="row navbar">
     <div class="col-md-2">
         <a href="<?php echo esc_html($url . '?page=expresspay-payment'); ?>"><?php esc_html_e('home', 'express-pay') ?></a>

@@ -12,7 +12,18 @@ class ExpressPayInvoicesAndPayemnts
 
         global $wpdb;
 
-        $response = $wpdb->get_results("SELECT id, amount, datecreated, status, options, options_id, dateofpayment FROM " . $wpdb->prefix . "expresspay_invoices");
+        $cache_key = 'expresspay_all_invoices';
+        $response = wp_cache_get($cache_key);
+        
+        if (false === $response) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom table access via $wpdb is required.
+            $response = $wpdb->get_results(
+                "SELECT id, amount, datecreated, status, options, options_id, dateofpayment FROM " . $wpdb->prefix . "expresspay_invoices"
+            );
+            if (!empty($response)) {
+                wp_cache_set($cache_key, $response, '', 3600);
+            }
+        }
 
         if (count($response) == 0) {
             ExpressPay::view(

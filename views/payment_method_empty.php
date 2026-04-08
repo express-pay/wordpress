@@ -1,3 +1,8 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+?>
 <div class="expresspay-payment">
     <div class="expresspay-payment-header">
     <div class="logo">

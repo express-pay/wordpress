@@ -1,3 +1,8 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+?>
 <div class="expresspay-payment" id="expresspay-payment">
     <div class="expresspay-payment-header">
         <div class="logo">
@@ -11,17 +16,19 @@
         <p></p>
     </div>
     <input type="hidden" id="ajax-url" value="<?php echo esc_html($ajax_url); ?>" />
+    <input type="hidden" id="expresspay-get-form-data-nonce" value="<?php echo esc_attr(wp_create_nonce('expresspay_get_form_data')); ?>" />
+    <input type="hidden" id="expresspay-check-invoice-nonce" value="<?php echo esc_attr(wp_create_nonce('expresspay_check_invoice')); ?>" />
     <div class="first_step" id="first_step">
 
-        <?php foreach ($response as $row) : ?>
-        <?php $options = json_decode($row->options); ?>
+        <?php foreach ($response as $expresspay_row) : ?>
+        <?php $expresspay_options = json_decode($expresspay_row->options); ?>
             <div class="row">
                 <div class="expresspay_payment_method">
-                    <input type="radio" id="payment_method_<?php echo esc_html($row->id); ?>" 
-                    data-type="<?php echo esc_html($row->type); ?>" 
-                    data-sendsms="<?php echo esc_html($options->SendSms); ?>" data-sendemail="<?php echo esc_html($options->SendEmail); ?>"
-                    name="payment_method" value="<?php echo esc_html($row->id); ?>" />
-                    <label for="payment_method_<?php echo esc_html($row->id); ?>"><?php echo esc_html($row->name); ?></label>
+                    <input type="radio" id="payment_method_<?php echo esc_html($expresspay_row->id); ?>" 
+                    data-type="<?php echo esc_html($expresspay_row->type); ?>" 
+                    data-sendsms="<?php echo esc_html($expresspay_options->SendSms); ?>" data-sendemail="<?php echo esc_html($expresspay_options->SendEmail); ?>"
+                    name="payment_method" value="<?php echo esc_html($expresspay_row->id); ?>" />
+                    <label for="payment_method_<?php echo esc_html($expresspay_row->id); ?>"><?php echo esc_html($expresspay_row->name); ?></label>
                 </div>
             </div>
         <?php endforeach;?>

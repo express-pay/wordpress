@@ -1,3 +1,8 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+?>
 <style>
     i.icon,
     a.icon {
@@ -41,11 +46,11 @@
         <div class="col-md-4"><?php esc_html_e('options', 'express-pay') ?></div>
     </div>
     <div class="content col-md-12" style="text-align: center;">
-        <?php foreach ($response as $row) : ?>
+        <?php foreach ($response as $expresspay_row) : ?>
             <div class="table-row">
-                <div class="col-md-3"><?php echo esc_html($row->name); ?></div>
+                <div class="col-md-3"><?php echo esc_html($expresspay_row->name); ?></div>
                 <div class="col-md-3"><?php 
-                switch ($row->type):
+                switch ($expresspay_row->type):
                     case 'erip':
                         esc_html_e('erip', 'express-pay');
                     break;
@@ -57,20 +62,20 @@
                     break;
                     endswitch; ?></div>
                 <div class="col-md-2">
-                    <?php if ($row->isactive == 1) : ?>
+                    <?php if ($expresspay_row->isactive == 1) : ?>
                         <p class="active"><?php esc_html_e('active', 'express-pay') ?></p>
                     <?php else : ?>
                         <p class="diactive"><?php esc_html_e('disable', 'express-pay') ?></p>
                     <?php endif; ?>
                 </div>
                 <div class="col-md-4">
-                        <a class="icon icon_edit" title="<?php esc_html_e('edit', 'express-pay') ?>" href="?page=payment-settings&id=<?php echo esc_html($row->id); ?>"></a>
-                    <?php if ($row->isactive == 1) :?>
-                        <a class="icon icon_stop" onclick="paymentMethodOptions('payment_setting_off', <?php echo esc_html($row->id); ?>, '<?php echo esc_attr(wp_create_nonce('express_pay_settings_list')); ?>')" title="<?php esc_html_e('disable', 'express-pay') ?>"></a>
+                        <a class="icon icon_edit" title="<?php esc_html_e('edit', 'express-pay') ?>" href="?page=payment-settings&id=<?php echo esc_html($expresspay_row->id); ?>"></a>
+                    <?php if ($expresspay_row->isactive == 1) :?>
+                        <a class="icon icon_stop" onclick="paymentMethodOptions('payment_setting_off', <?php echo esc_html($expresspay_row->id); ?>, '<?php echo esc_attr(wp_create_nonce('express_pay_settings_list')); ?>')" title="<?php esc_html_e('disable', 'express-pay') ?>"></a>
                     <?php else : ?>
-                        <a class="icon icon_on"  onclick="paymentMethodOptions('payment_setting_on', <?php echo esc_html($row->id); ?>, '<?php echo esc_attr(wp_create_nonce('express_pay_settings_list')); ?>')" title="<?php esc_html_e('enable', 'express-pay') ?>"></a>
+                        <a class="icon icon_on"  onclick="paymentMethodOptions('payment_setting_on', <?php echo esc_html($expresspay_row->id); ?>, '<?php echo esc_attr(wp_create_nonce('express_pay_settings_list')); ?>')" title="<?php esc_html_e('enable', 'express-pay') ?>"></a>
                     <?php endif; ?>
-                    <a class="icon icon_delete"  onclick="paymentMethodOptions('payment_setting_delete', <?php echo esc_html($row->id); ?>, '<?php echo esc_attr(wp_create_nonce('express_pay_settings_list')); ?>')" title="<?php esc_html_e('delete', 'express-pay') ?>"></a>
+                    <a class="icon icon_delete"  onclick="paymentMethodOptions('payment_setting_delete', <?php echo esc_html($expresspay_row->id); ?>, '<?php echo esc_attr(wp_create_nonce('express_pay_settings_list')); ?>')" title="<?php esc_html_e('delete', 'express-pay') ?>"></a>
                 </div>
             </div>
         <?php endforeach; ?>

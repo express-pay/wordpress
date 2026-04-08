@@ -1,12 +1,12 @@
-=== Express Pay Payment Module ===
+=== ExpressPay Payment Module ===
 Contributors: express-pay
-Tags: express pay, payment, ERIP, bank cards, e-pos, payment gateway
+Tags: payment, ERIP, bank cards, e-pos
 Requires at least: 4.0
-Tested up to: 6.4
+Tested up to: 6.9
 Requires PHP: 5.6
-Stable tag: 1.3.0
-License: Proprietary
-License URI: https://express-pay.by/
+Stable tag: 1.4.0
+License: GPL v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 WordPress plugin for accepting payments through Express Pay service via ERIP, bank cards and E-POS.
 
@@ -167,7 +167,7 @@ Check the following:
 
 == Changelog ==
 
-= 1.3.0 =
+= 1.4.0 =
 * WordPress plugin for Express Pay service
 * Multiple payment methods support (ERIP, cards, E-POS)
 * Payment form shortcode

@@ -1,3 +1,8 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+?>
 <div class="row navbar">
     <div class="col-md-2">
         <a href="<?php echo esc_html($url . '?page=expresspay-payment'); ?>"><?php esc_html_e('home', 'express-pay') ?></a>
@@ -25,14 +30,14 @@
         <div class="col-md-2"><?php esc_html_e('payment-date', 'express-pay') ?></div>
     </div>
     <div class="content col-md-12" style="text-align: center;">
-        <?php foreach ($response as $row) : ?>
+        <?php foreach ($response as $expresspay_row) : ?>
             <div class="row">
-                <div class="col-md-2"><?php echo esc_html($row->id); ?></div>
-                <div class="col-md-2"><?php echo esc_html($row->amount . ' BYN'); ?></div>
-                <div class="col-md-2"><?php echo esc_html($row->datecreated); ?></div>
+                <div class="col-md-2"><?php echo esc_html($expresspay_row->id); ?></div>
+                <div class="col-md-2"><?php echo esc_html($expresspay_row->amount . ' BYN'); ?></div>
+                <div class="col-md-2"><?php echo esc_html($expresspay_row->datecreated); ?></div>
                 <div class="col-md-2">
                     <?php
-                    switch ($row->status) {
+                    switch ($expresspay_row->status) {
                         case 0:
                             esc_html_e('during', 'express-pay');
                             break;
@@ -57,7 +62,7 @@
                     }
                     ?>
                 </div>
-                <div class="col-md-2"><?php echo esc_html($row->dateofpayment); ?></div>
+                <div class="col-md-2"><?php echo esc_html($expresspay_row->dateofpayment); ?></div>
                 <hr style="color:#888888" />
             </div>
         <?php endforeach; ?>

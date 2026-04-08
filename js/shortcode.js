@@ -101,6 +101,7 @@ jQuery(document).ready(function () {
         let phone = jQuery('#expresspay-payment-phone').val();
 
         let url = jQuery('#ajax-url').val();
+        let nonce = jQuery('#expresspay-get-form-data-nonce').val();
 
         jQuery(function ($) {
             $.ajax({
@@ -108,6 +109,7 @@ jQuery(document).ready(function () {
                 url: url,
                 data: {
                     action: 'expresspay_get_form_data',
+                    nonce: nonce,
                     type_id: type_id,
                     amount: amount,
                     last_name: last_name,
@@ -161,6 +163,7 @@ jQuery(document).ready(function () {
 
     function checkInvoice(signature, account_no, invoice_no, type_id) {
         let url = jQuery('#ajax-url').val();
+        let nonce = jQuery('#expresspay-check-invoice-nonce').val();
 
         jQuery('#first_step').hide(800);
         jQuery('#second_step').hide(800);
@@ -174,6 +177,7 @@ jQuery(document).ready(function () {
                 url: url,
                 data: {
                     action: 'expresspay_check_invoice',
+                    nonce: nonce,
                     type_id: type_id,
                     signature: signature,
                     account_no: account_no,

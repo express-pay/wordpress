@@ -29,14 +29,14 @@ class ExpressPay
     static function plugin_admin_styles()
     {
         //CSS
-        wp_enqueue_style('pluginAdminCssEp', plugins_url('css/styles.css', __FILE__), array(), get_plugin_version());
-        wp_enqueue_style('pluginAdminCssBst', plugins_url('css/bootstrap.min.css', __FILE__), array(), get_plugin_version());
-        wp_enqueue_style('pluginAdminCss', plugins_url('css/admin.css', __FILE__), array(), get_plugin_version());
+        wp_enqueue_style('pluginAdminCssEp', plugins_url('css/styles.css', __FILE__), array(), expresspay_get_plugin_version());
+        wp_enqueue_style('pluginAdminCssBst', plugins_url('css/bootstrap.min.css', __FILE__), array(), expresspay_get_plugin_version());
+        wp_enqueue_style('pluginAdminCss', plugins_url('css/admin.css', __FILE__), array(), expresspay_get_plugin_version());
         
         //JS
-        wp_enqueue_script('pluginAdminJsJsd', plugins_url('js/popper.min.js', __FILE__));
-        wp_enqueue_script('pluginAdminJsBst', plugins_url('js/bootstrap.min.js', __FILE__));
-        wp_enqueue_script('pluginAdminJs', plugins_url('js/admin.js', __FILE__), array('jquery'), get_plugin_version());
+        wp_enqueue_script('pluginAdminJsJsd', plugins_url('js/popper.min.js', __FILE__), array(), expresspay_get_plugin_version(), true);
+        wp_enqueue_script('pluginAdminJsBst', plugins_url('js/bootstrap.min.js', __FILE__), array(), expresspay_get_plugin_version(), true);
+        wp_enqueue_script('pluginAdminJs', plugins_url('js/admin.js', __FILE__), array('jquery'), expresspay_get_plugin_version(), true);
     }
 
     /**
@@ -47,10 +47,10 @@ class ExpressPay
     static function plugin_client_styles()
     {
         //CSS
-        wp_enqueue_style('pluginPaymentCss', plugins_url('css/payment.css', __FILE__), array(), get_plugin_version());
+        wp_enqueue_style('pluginPaymentCss', plugins_url('css/payment.css', __FILE__), array(), expresspay_get_plugin_version());
 
         //JS
-        wp_enqueue_script('pluginPaymentJs', plugins_url('js/shortcode.js', __FILE__), array('jquery'), get_plugin_version());
+        wp_enqueue_script('pluginPaymentJs', plugins_url('js/shortcode.js', __FILE__), array('jquery'), expresspay_get_plugin_version(), true);
     }
 
     /**
@@ -228,6 +228,7 @@ class ExpressPay
             return false;
         }
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom table write via $wpdb is required.
         $wpdb->update(
             EXPRESSPAY_TABLE_INVOICES_NAME,
             array('status' => $status),
@@ -236,6 +237,8 @@ class ExpressPay
             array('%d')
         );
         
+        // Invalidate cache after update
+        wp_cache_delete('expresspay_all_invoices');
         return true;
     }
 
@@ -259,6 +262,7 @@ class ExpressPay
             return false;
         }
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom table write via $wpdb is required.
         $wpdb->update(
             EXPRESSPAY_TABLE_INVOICES_NAME,
             array('dateofpayment' => $dateofpayment),
@@ -267,6 +271,8 @@ class ExpressPay
             array('%d')
         );
         
+        // Invalidate cache after update
+        wp_cache_delete('expresspay_all_invoices');
         return true;
     }
 
@@ -348,19 +354,14 @@ class ExpressPay
      */
     static function plugin_deactivation()
     {
-        global $wpdb;
+        // Deactivation should not remove DB schema/data. Cleanup is handled in uninstall.
+        delete_option('expresspay_plugin_is_active');
+        delete_option('expresspay_plugin_ult');
 
-        $table_name = $wpdb->prefix . "expresspay_options";
-
-        $sql = "DROP TABLE IF EXISTS $table_name";
-        $wpdb->query($sql);
-
-        $invoices_table_name = EXPRESSPAY_TABLE_INVOICES_NAME;
-        $sql = "DROP TABLE IF EXISTS $invoices_table_name";
-        $wpdb->query($sql);
-
-        delete_option('expresspay_plugin_is_active', 0);
-        delete_option('expresspay_plugin_ult', '');
+        wp_cache_delete('expresspay_active_options');
+        wp_cache_delete('expresspay_payment_settings_list');
+        wp_cache_delete('expresspay_all_invoices');
+        wp_cache_delete('expresspay_max_invoice_id');
     }
 
     /**
@@ -373,16 +374,15 @@ class ExpressPay
         global $wpdb;
 
         $table_name = $wpdb->prefix . "expresspay_options";
-
-        $sql = "DROP TABLE IF EXISTS $table_name";
-        $wpdb->query($sql);
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange -- Uninstall cleanup of plugin tables.
+        $wpdb->query("DROP TABLE IF EXISTS " . esc_sql($table_name));
 
         $invoices_table_name = EXPRESSPAY_TABLE_INVOICES_NAME;
-        $sql = "DROP TABLE IF EXISTS $invoices_table_name";
-        $wpdb->query($sql);
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange -- Uninstall cleanup of plugin tables.
+        $wpdb->query("DROP TABLE IF EXISTS " . esc_sql($invoices_table_name));
 
-        delete_option('expresspay_plugin_is_active', 0);
-        delete_option('expresspay_plugin_ult', '');
+        delete_option('expresspay_plugin_is_active');
+        delete_option('expresspay_plugin_ult');
     }
 
     static function log_error_exception($name, $message, $e)
@@ -402,18 +402,27 @@ class ExpressPay
 
     static function log($name, $type, $message)
     {
-        $log_url = wp_upload_dir();
-        $log_url = $log_url['basedir'] . "/expresspay";
+        // Get upload directory
+        $upload_dir = wp_upload_dir();
+        $log_url = $upload_dir['basedir'] . '/expresspay';
 
+        // Use WordPress Filesystem if needed
         if (!file_exists($log_url)) {
-            $is_created = mkdir($log_url, 0777);
-
-            if (!$is_created)
+            // Create directory with proper error handling
+            if (!wp_mkdir_p($log_url)) {
+                // If directory creation fails, don't log
                 return;
+            }
         }
 
-        $log_url .= '/express-pay-' . date('Y.m.d') . '.log';
+        $log_file = $log_url . '/express-pay-' . gmdate('Y.m.d') . '.log';
 
-        file_put_contents($log_url, $type . " - IP - " . sanitize_text_field($_SERVER['REMOTE_ADDR']) . "; DATETIME - " . date("Y-m-d H:i:s") . "; USER AGENT - " . sanitize_text_field($_SERVER['HTTP_USER_AGENT']) . "; FUNCTION - " . $name . "; MESSAGE - " . $message . ';' . PHP_EOL, FILE_APPEND);
+        // Prepare log entry with sanitized values
+        $remote_addr = isset($_SERVER['REMOTE_ADDR']) ? sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])) : '';
+        $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? sanitize_text_field(wp_unslash($_SERVER['HTTP_USER_AGENT'])) : '';
+        
+        $log_entry = $type . " - IP - " . $remote_addr . "; DATETIME - " . gmdate("Y-m-d H:i:s") . "; USER AGENT - " . $user_agent . "; FUNCTION - " . $name . "; MESSAGE - " . $message . ';' . PHP_EOL;
+
+        file_put_contents($log_file, $log_entry, FILE_APPEND);
     }
 }

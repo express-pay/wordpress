@@ -11,7 +11,21 @@ class ExpressPayPayment
     {
         global $wpdb;
 
-        $response = $wpdb->get_results("SELECT id, name, type, options, isactive FROM " . $wpdb->prefix . "expresspay_options WHERE isactive = 1");
+        $cache_key = 'expresspay_active_options';
+        $response = wp_cache_get($cache_key);
+        
+        if (false === $response) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom table access via $wpdb is required.
+            $response = $wpdb->get_results(
+                $wpdb->prepare(
+                    "SELECT id, name, type, options, isactive FROM " . $wpdb->prefix . "expresspay_options WHERE isactive = %d",
+                    1
+                )
+            );
+            if (!empty($response)) {
+                wp_cache_set($cache_key, $response, '', 3600);
+            }
+        }
 
         ob_start();
 
@@ -32,41 +46,63 @@ class ExpressPayPayment
      */
     static function get_form_data()
     {
+        // Verify nonce for security
+        $nonce = isset($_REQUEST['nonce']) ? sanitize_text_field(wp_unslash($_REQUEST['nonce'])) : '';
+        if (!wp_verify_nonce($nonce, 'expresspay_get_form_data')) {
+            wp_die(wp_json_encode(array('status' => 'error', 'message' => __('Security check failed.', 'express-pay'))));
+        }
+
         // Verify all required parameters exist
         if (!isset($_REQUEST['type_id']) || !isset($_REQUEST['amount']) || 
             !isset($_REQUEST['last_name']) || !isset($_REQUEST['first_name']) ||
             !isset($_REQUEST['patronymic']) || !isset($_REQUEST['email']) ||
             !isset($_REQUEST['phone']) || !isset($_REQUEST['url']) || 
             !isset($_REQUEST['info'])) {
-            wp_die(__('Missing required parameters.', 'express-pay'));
+            wp_die(wp_json_encode(array('status' => 'error', 'message' => __('Missing required parameters.', 'express-pay'))));
         }
 
-        $type_id = sanitize_text_field($_REQUEST['type_id']);
+        $type_id = intval($_REQUEST['type_id']);
 
         global $wpdb;
 
-        $query = $wpdb->prepare("SELECT id, name, type, options, isactive FROM " . EXPRESSPAY_TABLE_PAYMENT_METHOD_NAME . " WHERE id = %d", $type_id);
-        $response = $wpdb->get_row($query);
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom table access via $wpdb is required.
+        $response = $wpdb->get_row(
+            $wpdb->prepare(
+                "SELECT id, name, type, options, isactive FROM " . $wpdb->prefix . "expresspay_options WHERE id = %d",
+                $type_id
+            )
+        );
 
         if (empty($response)) {
-            wp_die(__('Payment method not found.', 'express-pay'));
+            wp_die(wp_json_encode(array('status' => 'error', 'message' => __('Payment method not found.', 'express-pay'))));
         }
 
         if ($response->isactive == 1) {
-            $max_id = $wpdb->get_row("SELECT max(id) as id FROM " . $wpdb->prefix . "expresspay_invoices");
+            $cache_key = 'expresspay_max_invoice_id';
+            $max_id = wp_cache_get($cache_key);
+            
+            if (false === $max_id) {
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom table access via $wpdb is required.
+                $max_id = $wpdb->get_row(
+                    "SELECT max(id) as id FROM " . $wpdb->prefix . "expresspay_invoices"
+                );
+                if ($max_id) {
+                    wp_cache_set($cache_key, $max_id, '', 300);
+                }
+            }
 
             $account_no = $max_id->id == null ? 1 : $max_id->id + 1;
 
             $options = json_decode($response->options);
 
-            $amount = sanitize_text_field($_REQUEST['amount']);
-            $last_name = sanitize_text_field($_REQUEST['last_name']);
-            $first_name = sanitize_text_field($_REQUEST['first_name']);
-            $patronymic = sanitize_text_field($_REQUEST['patronymic']);
-            $email = sanitize_email($_REQUEST['email']);
-            $phone = sanitize_text_field($_REQUEST['phone']);
-            $url = esc_url_raw($_REQUEST['url']);
-            $info = sanitize_text_field($_REQUEST['info']);
+            $amount = sanitize_text_field(wp_unslash($_REQUEST['amount']));
+            $last_name = sanitize_text_field(wp_unslash($_REQUEST['last_name']));
+            $first_name = sanitize_text_field(wp_unslash($_REQUEST['first_name']));
+            $patronymic = sanitize_text_field(wp_unslash($_REQUEST['patronymic']));
+            $email = sanitize_email(wp_unslash($_REQUEST['email']));
+            $phone = sanitize_text_field(wp_unslash($_REQUEST['phone']));
+            $url = esc_url_raw(wp_unslash($_REQUEST['url']));
+            $info = sanitize_text_field(wp_unslash($_REQUEST['info']));
 
             if ($options->SendSms)
             {
@@ -106,6 +142,7 @@ class ExpressPayPayment
                 $signatureParams['Signature'] = ExpressPay::computeSignature($signatureParams, $options->SecretWord, 'add-web-invoice');
             }
 
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom table write via $wpdb is required.
             $wpdb->insert(
                 EXPRESSPAY_TABLE_INVOICES_NAME,
                 array(
@@ -117,6 +154,9 @@ class ExpressPayPayment
                 ),
                 array('%s', '%d', '%s', '%d', '%s', '%d')
             );
+
+            wp_cache_delete('expresspay_all_invoices');
+            wp_cache_delete('expresspay_max_invoice_id');
 
             unset($signatureParams['Token']);
 
@@ -133,24 +173,43 @@ class ExpressPayPayment
      */
     static function check_invoice()
     {
+        // Verify nonce for security
+        $nonce = isset($_REQUEST['nonce']) ? sanitize_text_field(wp_unslash($_REQUEST['nonce'])) : '';
+        if (!wp_verify_nonce($nonce, 'expresspay_check_invoice')) {
+            wp_die(wp_json_encode(array('status' => 'fail', 'message' => __('Security check failed.', 'express-pay'))));
+        }
+
         // Verify all required parameters exist
         if (!isset($_REQUEST['type_id']) || !isset($_REQUEST['signature']) || 
             !isset($_REQUEST['account_no']) || !isset($_REQUEST['invoice_no'])) {
-            wp_die(__('Missing required parameters.', 'express-pay'));
+            wp_die(wp_json_encode(array('status' => 'fail', 'message' => __('Missing required parameters.', 'express-pay'))));
         }
 
-        $type_id = sanitize_text_field($_REQUEST['type_id']);
-        $signature = sanitize_text_field($_REQUEST['signature']);
-        $account_no = sanitize_text_field($_REQUEST['account_no']);
-        $invoice_no = sanitize_text_field($_REQUEST['invoice_no']);
+        $type_id = intval($_REQUEST['type_id']);
+        $signature = sanitize_text_field(wp_unslash($_REQUEST['signature']));
+        $account_no = sanitize_text_field(wp_unslash($_REQUEST['account_no']));
+        $invoice_no = sanitize_text_field(wp_unslash($_REQUEST['invoice_no']));
 
         global $wpdb;
 
-        $query = $wpdb->prepare("SELECT options FROM " . EXPRESSPAY_TABLE_PAYMENT_METHOD_NAME . " WHERE id = %d", $type_id);
-        $response = $wpdb->get_row($query);
+        $cache_key = 'expresspay_options_' . intval($type_id);
+        $response = wp_cache_get($cache_key);
+        
+        if (false === $response) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom table access via $wpdb is required.
+            $response = $wpdb->get_row(
+                $wpdb->prepare(
+                    "SELECT options FROM " . $wpdb->prefix . "expresspay_options WHERE id = %d",
+                    $type_id
+                )
+            );
+            if ($response) {
+                wp_cache_set($cache_key, $response, '', 3600);
+            }
+        }
 
         if (empty($response)) {
-            wp_die(__('Payment method not found.', 'express-pay'));
+            wp_die(wp_json_encode(array('status' => 'fail', 'message' => __('Payment method not found.', 'express-pay'))));
         }
 
         $options = json_decode($response->options);
@@ -167,6 +226,7 @@ class ExpressPayPayment
 
         if ($signature == $valid_signature) {
 
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom table write via $wpdb is required.
             $wpdb->update(
                 EXPRESSPAY_TABLE_INVOICES_NAME,
                 array('status' => 1),
@@ -174,6 +234,8 @@ class ExpressPayPayment
                 array('%d'),
                 array('%s')
             );
+
+            wp_cache_delete('expresspay_all_invoices');
 
             switch ($options->Type) {
                 case 'erip':
@@ -256,29 +318,53 @@ class ExpressPayPayment
     }
 
     /**
-     * Получение и обратока уведомления
+     * Получение и обработка уведомления
+     * 
+     * Это webhook от сервиса Express Pay, поэтому не требует nonce,
+     * вместо этого используется проверка подписи (Signature verification).
+     * Нonce используется для защиты от CSRF при обработке данных от браузера пользователя,
+     * но webhook от внешнего сервиса защищен криптографической подписью.
      */
     static function receive_notification()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Check if REQUEST_METHOD is set and is POST
+        $request_method = isset($_SERVER['REQUEST_METHOD']) ? sanitize_text_field(wp_unslash($_SERVER['REQUEST_METHOD'])) : '';
+        
+        if ($request_method === 'POST') {
+            // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Webhook endpoint, signature verified instead
+            
             // Verify required parameters exist
             if (!isset($_REQUEST['type_id'])) {
-                wp_die(__('Missing type_id parameter.', 'express-pay'));
+                wp_die(wp_json_encode(array('error' => __('Missing type_id parameter.', 'express-pay'))));
             }
 
-            $data = (isset($_REQUEST['Data'])) ? sanitize_text_field($_REQUEST['Data']) : '';
+            $data = (isset($_REQUEST['Data'])) ? sanitize_text_field(wp_unslash($_REQUEST['Data'])) : '';
             $data = stripcslashes($data);
-            $signature = (isset($_REQUEST['Signature'])) ? sanitize_text_field($_REQUEST['Signature']) : '';
-
-            $type_id = sanitize_text_field($_REQUEST['type_id']);
+            $signature = (isset($_REQUEST['Signature'])) ? sanitize_text_field(wp_unslash($_REQUEST['Signature'])) : '';
+            $type_id = intval($_REQUEST['type_id']);
+			
+			// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
             global $wpdb;
 
-            $query = $wpdb->prepare("SELECT id, name, type, options, isactive FROM " . EXPRESSPAY_TABLE_PAYMENT_METHOD_NAME . " WHERE id = %d", $type_id);
-            $payment_options = $wpdb->get_row($query);
+            $cache_key = 'expresspay_options_' . intval($type_id);
+            $payment_options = wp_cache_get($cache_key);
+            
+            if (false === $payment_options) {
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Custom table access via $wpdb is required.
+                $payment_options = $wpdb->get_row(
+                    $wpdb->prepare(
+                        "SELECT id, name, type, options, isactive FROM " . $wpdb->prefix . "expresspay_options WHERE id = %d",
+                        $type_id
+                    )
+                );
+                if ($payment_options) {
+                    wp_cache_set($cache_key, $payment_options, '', 3600);
+                }
+            }
             
             if (empty($payment_options)) {
-                wp_die(__('Payment method not found.', 'express-pay'));
+                wp_die(wp_json_encode(array('error' => __('Payment method not found.', 'express-pay'))));
             }
 
             $options = json_decode($payment_options->options);
